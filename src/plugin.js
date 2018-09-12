@@ -36,6 +36,12 @@ function SkyUXPlugin() {
       resourceFileContents
     );
 
+    console.warn([
+      '[WARNING] @skyux-sdk/builder-plugin-skyux/plugin.js',
+      'The contents of this file are deprecated',
+      'and will be removed in the next major release.'
+    ].join(' '));
+
     return Buffer.from(modified, 'utf8');
   };
 
