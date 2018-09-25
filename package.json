@@ -1,6 +1,6 @@
 {
   "name": "@skyux-sdk/builder-plugin-skyux",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-rc.0",
   "description": "A SKY UX Builder plugin to enhance the SKY UX component library.",
   "main": "index.js",
   "scripts": {
