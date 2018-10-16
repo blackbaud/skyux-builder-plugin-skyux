@@ -56,55 +56,21 @@ function SkyUXPlugin() {
 
     return `
 import {
-  Inject,
   Injectable
 } from '@angular/core';
 
 import {
-  SkyAppFormat
-} from '@skyux/core';
-
-import {
-  SkyAppHostLocaleProvider,
-  SkyAppLocaleProvider,
+  SkyAppLocaleInfo,
   SkyLibResourcesProvider
 } from '@skyux/i18n';
-
-import {
-  BehaviorSubject
-} from 'rxjs/BehaviorSubject';
-
-import {
-  Observable
-} from 'rxjs/Observable';
 
 @Injectable()
 export class ${className} implements SkyLibResourcesProvider {
   private resources: any = ${JSON.stringify(resources)};
-  private skyAppFormat: SkyAppFormat;
-  private value$ = new BehaviorSubject<string>('');
 
-  constructor(
-    @Inject(SkyAppHostLocaleProvider) private localeProvider: SkyAppLocaleProvider
-  ) {
-    this.skyAppFormat = new SkyAppFormat();
-  }
-
-  public getDefaultString(name: string, ...args: any[]): string {
-    const locale = 'en_US';
+  public getString(localeInfo: SkyAppLocaleInfo, name: string): string {
+    const locale = localeInfo.locale.replace('-', '_');
     return this.resources[locale][name] || name;
-  }
-
-  public getString(name: string, ...args: any[]): Observable<string> {
-    this.localeProvider.getLocaleInfo()
-      .subscribe((localeInfo) => {
-        const locale = localeInfo.locale.replace('-', '_');
-        const value = this.resources[locale][name] || name;
-        this.skyAppFormat.formatText(value, args);
-        this.value$.next(value);
-      });
-
-    return this.value$;
   }
 }
 `;
