@@ -34,12 +34,14 @@ function SkyUXPlugin() {
 
   const resourceFilesExist = ('en_US' in resourceFilesContents);
 
-  const writeResourcesProvider = (content) => {
+  const writeResourcesProvider = (content, resourcePath) => {
     if (!resourceFilesExist) {
       return content;
     }
 
-    if (content.indexOf('implements SkyLibResourcesProvider') === -1) {
+    const regexp = new RegExp(/src\/app\/public\/plugin-resources\/.*(-resources-provider.ts)$/);
+
+    if (!regexp.test(resourcePath)) {
       return content;
     }
 
@@ -76,10 +78,10 @@ export class ${className} implements SkyLibResourcesProvider {
 `;
   }
 
-  const preload = (content) => {
+  const preload = (content, resourcePath) => {
     let modified = content.toString();
 
-    modified = writeResourcesProvider(modified);
+    modified = writeResourcesProvider(modified, resourcePath);
 
     return Buffer.from(modified, 'utf8');
   };
