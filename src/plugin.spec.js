@@ -1,4 +1,5 @@
 const mock = require('mock-require');
+const path = require('path');
 
 describe('Plugin', () => {
   let mockFsExtra;
@@ -6,7 +7,7 @@ describe('Plugin', () => {
   let Plugin;
 
   const defaultContent = 'export class SkySampleResourcesProvider implements SkyLibResourcesProvider';
-  const defaultResourcePath = '/src/app/public/plugin-resources/foo-resources-provider.ts';
+  const defaultResourcePath = path.join('src', 'app', 'public', 'plugin-resources', 'foo-resources-provider.ts');
 
   beforeEach(() => {
     mockFsExtra = {
@@ -108,10 +109,19 @@ export class SkySampleResourcesProvider implements SkyLibResourcesProvider {
     expect(content).toEqual(modified);
   });
 
-  it('should not alter content if file path does not match', () => {
+  it('should not alter content if file not in correct directory', () => {
     const plugin = new Plugin();
     const content = Buffer.from(`export class FooBar {}`, 'utf8');
     const modified = plugin.preload(content, 'foo.txt');
+
+    expect(content).toEqual(modified);
+  });
+
+  it('should not alter content if file is not named correctly', () => {
+    const plugin = new Plugin();
+    const content = Buffer.from(`export class FooBar {}`, 'utf8');
+    const resourcePath = path.join('src', 'app', 'public', 'plugin-resources', 'foo.text');
+    const modified = plugin.preload(content, resourcePath);
 
     expect(content).toEqual(modified);
   });

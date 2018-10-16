@@ -39,8 +39,12 @@ function SkyUXPlugin() {
       return content;
     }
 
-    const regexp = new RegExp(/src\/app\/public\/plugin-resources\/.*(-resources-provider.ts)$/);
+    const dir = path.join('src', 'app', 'public', 'plugin-resources');
+    if (resourcePath.indexOf(dir) === -1) {
+      return content;
+    }
 
+    const regexp = new RegExp(/(-resources-provider.ts)$/);
     if (!regexp.test(resourcePath)) {
       return content;
     }
