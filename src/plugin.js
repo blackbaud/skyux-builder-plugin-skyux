@@ -39,7 +39,7 @@ function SkyUXPlugin() {
       return content;
     }
 
-    if (content.indexOf('implements SkyLibResourcesProvider {') === -1) {
+    if (content.indexOf('implements SkyLibResourcesProvider') === -1) {
       return content;
     }
 
