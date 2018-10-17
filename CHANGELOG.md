@@ -1,3 +1,7 @@
+# 1.0.0-rc.1 (2018-10-17)
+
+- Added preload hook that statically injects the contents of locale resources files into TypeScript classes implementing `SkyAppResourcesProvider`. [#2](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/2)
+
 # 1.0.0-rc.0 (2018-09-25)
 
 - Initial release candidate.
