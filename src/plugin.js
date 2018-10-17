@@ -76,7 +76,7 @@ export class ${className} implements SkyLibResourcesProvider {
 
   public getString(localeInfo: SkyAppLocaleInfo, name: string): string {
     const locale = localeInfo.locale.replace('-', '_');
-    const values = this.resources[localeInfo.locale];
+    const values = this.resources[locale];
 
     if (values) {
       return values[name];
