@@ -1,46 +1,97 @@
 const fs = require('fs-extra');
+const glob = require('glob');
+const path = require('path');
 
-function SkyUXPlugin() {
-  const resourceFilePath = './src/assets/locales/resources_en_US.json';
-  const resourceFileExists = fs.pathExistsSync(resourceFilePath);
+function getLocaleFiles() {
+  return glob.sync(
+    path.join('src/assets/locales', 'resources_*.json')
+  );
+}
 
-  let resourceFileContents;
-  if (resourceFileExists) {
-    resourceFileContents = fs.readFileSync(
-      resourceFilePath,
-      { encoding: 'utf8' }
-    );
+function readJson(file) {
+  fs.ensureFileSync(file);
+
+  const buffer = fs.readFileSync(file);
+
+  let contents;
+  // Is the locale file empty?
+  if (buffer.length === 0) {
+    contents = {};
+  } else {
+    contents = JSON.parse(buffer.toString());
   }
 
-  /**
-   * During the `skyux build-public-library` step, this function injects
-   * the contents of the locales resources file when referenced via
-   * a `require` statement in a source file.
-   * This is done to prevent a breaking change, since SkyResources fetches
-   * the resource string synchronously, and SkyAppResources asynchronously.
-   * Once a library can release a breaking change to adopt SkyAppResources,
-   * this file should no longer be used.
-   */
-  const preload = (content) => {
-    if (!resourceFileExists) {
+  return contents;
+}
+
+function SkyUXPlugin() {
+  const resourceFilesContents = {};
+  getLocaleFiles().forEach((file) => {
+    const locale = file.split('.json')[0].split('resources_')[1];
+    const contents = readJson(file);
+    resourceFilesContents[locale] = contents;
+  });
+
+  const resourceFilesExist = ('en_US' in resourceFilesContents);
+
+  const writeResourcesProvider = (content, resourcePath) => {
+    if (!resourceFilesExist) {
       return content;
     }
 
-    const regex = /require\('!json-loader!\.skypageslocales\/resources_en_US\.json'\)/gi;
-    if (!regex.test(content)) {
+    const dir = path.join('src', 'app', 'public', 'plugin-resources');
+    if (resourcePath.indexOf(dir) === -1) {
       return content;
     }
 
-    const modified = content.toString().replace(
-      regex,
-      resourceFileContents
-    );
+    const regexp = new RegExp(/(-resources-provider.ts)$/);
+    if (!regexp.test(resourcePath)) {
+      return content;
+    }
 
-    console.warn([
-      '[WARNING] @skyux-sdk/builder-plugin-skyux/plugin.js',
-      'The contents of this file are deprecated',
-      'and will be removed in the next major release.'
-    ].join(' '));
+    const resources = {};
+    Object.keys(resourceFilesContents).forEach((locale) => {
+      resources[locale] = {};
+      Object.keys(resourceFilesContents[locale]).forEach((key) => {
+        resources[locale][key] = resourceFilesContents[locale][key].message;
+      });
+    });
+
+    let className = content.split('export class ')[1];
+    className = className.split(' ')[0];
+
+    return `
+import {
+  Injectable
+} from '@angular/core';
+
+import {
+  SkyAppLocaleInfo,
+  SkyLibResourcesProvider
+} from '@skyux/i18n';
+
+@Injectable()
+export class ${className} implements SkyLibResourcesProvider {
+  private resources: any = ${JSON.stringify(resources)};
+
+  public getString(localeInfo: SkyAppLocaleInfo, name: string): string {
+    const locale = localeInfo.locale.replace('-', '_');
+    const values = this.resources[localeInfo.locale];
+
+    if (values) {
+      return values[name];
+    }
+
+    return '';
+  }
+}
+`;
+  }
+
+  const preload = (content, resourcePath) => {
+    let modified = content.toString();
+
+    modified = writeResourcesProvider(modified, resourcePath);
 
     return Buffer.from(modified, 'utf8');
   };
