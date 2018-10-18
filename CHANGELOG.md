@@ -1,3 +1,7 @@
+# 1.0.0-rc.3 (2018-10-17)
+
+- Fixed plugin to write resources providers during `skyux build-public-library`. [#3](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/3)
+
 # 1.0.0-rc.2 (2018-10-17)
 
 - Fixed generated class to use correct formatted locale.
