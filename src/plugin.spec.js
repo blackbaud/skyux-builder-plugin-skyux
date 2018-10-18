@@ -76,6 +76,15 @@ describe('Plugin', () => {
     expect(modified).toContain(`{"en_US":{"greeting":"hello"},"fr_CA":{"greeting":"bonjour"}}`);
   });
 
+  it('should handle files located in .skypagestmp directory', () => {
+    const resourcePath = path.join('.skypagestmp', 'plugin-resources', 'foo-resources-provider.ts');
+    const plugin = new Plugin();
+    const content = Buffer.from(defaultContent, 'utf8');
+    const modified = plugin.preload(content, resourcePath);
+
+    expect(modified).toContain(`{"en_US":{"greeting":"hello"},"fr_CA":{"greeting":"bonjour"}}`);
+  });
+
   it('should populate the `getString` method', () => {
     const plugin = new Plugin();
     const content = Buffer.from(`
