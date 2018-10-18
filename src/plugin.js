@@ -39,8 +39,13 @@ function SkyUXPlugin() {
       return content;
     }
 
+    // Directory used when serving or building.
     const dir = path.join('src', 'app', 'public', 'plugin-resources');
-    if (resourcePath.indexOf(dir) === -1) {
+
+    // Directory used when building library.
+    const tempDir = path.join('.skypagestmp', 'plugin-resources');
+
+    if (resourcePath.indexOf(dir) === -1 && resourcePath.indexOf(tempDir) === -1) {
       return content;
     }
 
