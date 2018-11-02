@@ -134,4 +134,14 @@ export class SkySampleResourcesProvider implements SkyLibResourcesProvider {
 
     expect(content).toEqual(modified);
   });
+
+  it('should resolve resource paths', () => {
+    const plugin = new Plugin();
+    const content = Buffer.from(defaultContent, 'utf8');
+    const spy = spyOn(path, 'resolve').and.callThrough();
+
+    plugin.preload(content, defaultResourcePath);
+
+    expect(spy).toHaveBeenCalledWith(defaultResourcePath);
+  });
 });
