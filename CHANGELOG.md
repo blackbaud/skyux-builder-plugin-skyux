@@ -1,3 +1,7 @@
+# 1.0.0-rc.4 (2018-11-02)
+
+- Fixed plugin to resolve paths correctly. [#5](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/5)
+
 # 1.0.0-rc.3 (2018-10-17)
 
 - Fixed plugin to write resources providers during `skyux build-public-library`. [#3](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/3)
