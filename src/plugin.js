@@ -62,9 +62,10 @@ function SkyUXPlugin() {
 
     const resources = {};
     Object.keys(resourceFilesContents).forEach((locale) => {
-      resources[locale] = {};
+      let localeLowerCase = locale.toLowerCase();
+      resources[localeLowerCase] = {};
       Object.keys(resourceFilesContents[locale]).forEach((key) => {
-        resources[locale][key] = resourceFilesContents[locale][key].message;
+        resources[localeLowerCase][key] = resourceFilesContents[locale][key].message;
       });
     });
 
@@ -86,7 +87,7 @@ export class ${className} implements SkyLibResourcesProvider {
   private resources: any = ${JSON.stringify(resources)};
 
   public getString(localeInfo: SkyAppLocaleInfo, name: string): string {
-    const locale = localeInfo.locale.replace('-', '_');
+    const locale = localeInfo.locale.toLowerCase().replace('-', '_');
     const values = this.resources[locale];
 
     if (values) {
