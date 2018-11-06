@@ -62,10 +62,9 @@ function SkyUXPlugin() {
 
     const resources = {};
     Object.keys(resourceFilesContents).forEach((locale) => {
-      let localeLowerCase = locale.toLowerCase();
-      resources[localeLowerCase] = {};
+      resources[locale.toLowerCase()] = {};
       Object.keys(resourceFilesContents[locale]).forEach((key) => {
-        resources[localeLowerCase][key] = resourceFilesContents[locale][key].message;
+        resources[locale.toLowerCase()][key] = resourceFilesContents[locale][key].message;
       });
     });
 
