@@ -88,17 +88,20 @@ import {
 } from '@angular/core';
 
 import {
-  getString,
   SkyAppLocaleInfo,
   SkyLibResourcesProvider
 } from '@skyux/i18n';
+
+import {
+  getStringForLocale
+} from '@skyux/i18n/modules/i18n/get-string-for-locale';
 
 @Injectable()
 export class ${className} implements SkyLibResourcesProvider {
   private resources: any = ${JSON.stringify(resources)};
 
   public getString(localeInfo: SkyAppLocaleInfo, name: string): string {
-    return getString(this.resources, localeInfo.locale, name);
+    return getStringForLocale(this.resources, localeInfo.locale, name);
   }
 }
 `;
