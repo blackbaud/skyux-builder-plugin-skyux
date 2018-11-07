@@ -27,11 +27,18 @@ describe('Plugin', () => {
                 message: 'hello'
               }
             };
-            break;
+          break;
           case 'resources_fr_CA.json':
             json = {
               greeting: {
                 message: 'bonjour'
+              }
+            };
+          break;
+          case 'resources_en_ga.json':
+            json = {
+              greeting: {
+                message: 'cheerio'
               }
             };
           break;
@@ -73,7 +80,7 @@ describe('Plugin', () => {
     const content = Buffer.from(defaultContent, 'utf8');
     const modified = plugin.preload(content, defaultResourcePath);
 
-    expect(modified).toContain(`{"en_US":{"greeting":"hello"},"fr_CA":{"greeting":"bonjour"}}`);
+    expect(modified).toContain(`{"en-us":{"greeting":"hello"},"fr-ca":{"greeting":"bonjour"}}`);
   });
 
   it('should handle files located in .skypagestmp directory', () => {
@@ -82,7 +89,7 @@ describe('Plugin', () => {
     const content = Buffer.from(defaultContent, 'utf8');
     const modified = plugin.preload(content, resourcePath);
 
-    expect(modified).toContain(`{"en_US":{"greeting":"hello"},"fr_CA":{"greeting":"bonjour"}}`);
+    expect(modified).toContain(`{"en-us":{"greeting":"hello"},"fr-ca":{"greeting":"bonjour"}}`);
   });
 
   it('should populate the `getString` method', () => {
@@ -105,7 +112,7 @@ export class SkySampleResourcesProvider implements SkyLibResourcesProvider {
     const content = Buffer.from(defaultContent, 'utf8');
     const modified = plugin.preload(content, defaultResourcePath);
 
-    expect(modified).toContain(`{"en_US":{}}`);
+    expect(modified).toContain(`{"en-us":{}}`);
   });
 
   it('should not alter content if default resource file does not exist', () => {
@@ -143,5 +150,26 @@ export class SkySampleResourcesProvider implements SkyLibResourcesProvider {
     plugin.preload(content, defaultResourcePath);
 
     expect(spy).toHaveBeenCalledWith(defaultResourcePath);
+  });
+
+  it('should handle lowercase country keys', () => {
+    spyOn(mockGlob, 'sync').and.returnValue([
+      'resources_en_US.json',
+      'resources_en_ga.json'
+    ]);
+
+    const plugin = new Plugin();
+    const content = Buffer.from(defaultContent, 'utf8');
+    const modified = plugin.preload(content, defaultResourcePath);
+
+    expect(modified).toContain(`{"en-us":{"greeting":"hello"},"en-ga":{"greeting":"cheerio"}}`);
+  });
+
+  it('should include a default locale in the output', () => {
+    const plugin = new Plugin();
+    const content = Buffer.from(defaultContent, 'utf8');
+    const modified = plugin.preload(content, defaultResourcePath);
+
+    expect(modified).toContain(`defaultLocale = 'en-US'`);
   });
 });

@@ -24,15 +24,23 @@ function readJson(file) {
   return contents;
 }
 
+function getLocaleFromFileName(fileName) {
+  let locale = fileName.split('.json')[0].split('resources_')[1];
+
+  locale = locale.toLowerCase().replace('_', '-');
+
+  return locale;
+}
+
 function SkyUXPlugin() {
   const resourceFilesContents = {};
   getLocaleFiles().forEach((file) => {
-    const locale = file.split('.json')[0].split('resources_')[1];
+    const locale = getLocaleFromFileName(file);
     const contents = readJson(file);
     resourceFilesContents[locale] = contents;
   });
 
-  const resourceFilesExist = ('en_US' in resourceFilesContents);
+  const resourceFilesExist = ('en-us' in resourceFilesContents);
 
   const writeResourcesProvider = (content, resourcePath) => {
     if (!resourceFilesExist) {
@@ -83,17 +91,29 @@ import {
 
 @Injectable()
 export class ${className} implements SkyLibResourcesProvider {
+  private defaultLocale = 'en-US';
   private resources: any = ${JSON.stringify(resources)};
 
   public getString(localeInfo: SkyAppLocaleInfo, name: string): string {
-    const locale = localeInfo.locale.replace('-', '_');
-    const values = this.resources[locale];
+    let values = this.getResourcesForLocale(localeInfo.locale);
+
+    if (values) {
+      return values[name];
+    }
+
+    // Attempt to locate default resources.
+    values = this.getResourcesForLocale(this.defaultLocale);
 
     if (values) {
       return values[name];
     }
 
     return '';
+  }
+
+  private getResourcesForLocale(locale: string): any {
+    const parsedLocale = locale.toLowerCase().replace('_', '-');
+    return this.resources[parsedLocale];
   }
 }
 `;
