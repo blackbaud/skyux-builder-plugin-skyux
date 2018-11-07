@@ -88,18 +88,17 @@ import {
 } from '@angular/core';
 
 import {
+  getString,
   SkyAppLocaleInfo,
   SkyLibResourcesProvider
 } from '@skyux/i18n';
-
-const utils = require('@skyux-sdk/builder-plugin-skyux/src/utils');
 
 @Injectable()
 export class ${className} implements SkyLibResourcesProvider {
   private resources: any = ${JSON.stringify(resources)};
 
   public getString(localeInfo: SkyAppLocaleInfo, name: string): string {
-    return utils.getString(this.resources, localeInfo.locale, name);
+    return getString(this.resources, localeInfo.locale, name);
   }
 }
 `;
