@@ -27,7 +27,7 @@ function readJson(file) {
 function getLocaleFromFileName(fileName) {
   let locale = fileName.split('.json')[0].split('resources_')[1];
 
-  locale = locale.toLowerCase().replace('_', '-');
+  locale = locale.toUpperCase().replace('_', '-');
 
   return locale;
 }
@@ -40,7 +40,10 @@ function SkyUXPlugin() {
     resourceFilesContents[locale] = contents;
   });
 
-  const resourceFilesExist = ('en-us' in resourceFilesContents);
+  // Standardize keys to be uppercase, due to some language limitations
+  // with lowercase characters.
+  // See: https://stackoverflow.com/questions/234591/upper-vs-lower-case
+  const resourceFilesExist = ('EN-US' in resourceFilesContents);
 
   const writeResourcesProvider = (content, resourcePath) => {
     if (!resourceFilesExist) {
@@ -89,31 +92,14 @@ import {
   SkyLibResourcesProvider
 } from '@skyux/i18n';
 
+const utils = require('@skyux-sdk/builder-plugin-skyux/src/utils');
+
 @Injectable()
 export class ${className} implements SkyLibResourcesProvider {
-  private defaultLocale = 'en-US';
   private resources: any = ${JSON.stringify(resources)};
 
   public getString(localeInfo: SkyAppLocaleInfo, name: string): string {
-    let values = this.getResourcesForLocale(localeInfo.locale);
-
-    if (values) {
-      return values[name];
-    }
-
-    // Attempt to locate default resources.
-    values = this.getResourcesForLocale(this.defaultLocale);
-
-    if (values) {
-      return values[name];
-    }
-
-    return '';
-  }
-
-  private getResourcesForLocale(locale: string): any {
-    const parsedLocale = locale.toLowerCase().replace('_', '-');
-    return this.resources[parsedLocale];
+    return utils.getString(this.resources, localeInfo.locale, name);
   }
 }
 `;
