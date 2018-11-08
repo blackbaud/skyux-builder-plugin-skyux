@@ -1,3 +1,7 @@
+# 1.0.0-rc.5 (2018-11-08)
+
+- Added support for `@skyux/i18n#3.3.0` (via `@blackbaud/skyux-builder`), which provides a `getStringForLocale` utility method. [#8](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/8)
+
 # 1.0.0-rc.4 (2018-11-02)
 
 - Fixed plugin to resolve paths correctly. [#5](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/5)
