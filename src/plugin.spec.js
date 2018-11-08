@@ -27,7 +27,7 @@ describe('Plugin', () => {
                 message: 'hello'
               }
             };
-            break;
+          break;
           case 'resources_fr_CA.json':
             json = {
               greeting: {
@@ -73,7 +73,7 @@ describe('Plugin', () => {
     const content = Buffer.from(defaultContent, 'utf8');
     const modified = plugin.preload(content, defaultResourcePath);
 
-    expect(modified).toContain(`{"en_US":{"greeting":"hello"},"fr_CA":{"greeting":"bonjour"}}`);
+    expect(modified).toContain(`{"EN-US":{"greeting":"hello"},"FR-CA":{"greeting":"bonjour"}}`);
   });
 
   it('should handle files located in .skypagestmp directory', () => {
@@ -82,7 +82,7 @@ describe('Plugin', () => {
     const content = Buffer.from(defaultContent, 'utf8');
     const modified = plugin.preload(content, resourcePath);
 
-    expect(modified).toContain(`{"en_US":{"greeting":"hello"},"fr_CA":{"greeting":"bonjour"}}`);
+    expect(modified).toContain(`{"EN-US":{"greeting":"hello"},"FR-CA":{"greeting":"bonjour"}}`);
   });
 
   it('should populate the `getString` method', () => {
@@ -105,7 +105,7 @@ export class SkySampleResourcesProvider implements SkyLibResourcesProvider {
     const content = Buffer.from(defaultContent, 'utf8');
     const modified = plugin.preload(content, defaultResourcePath);
 
-    expect(modified).toContain(`{"en_US":{}}`);
+    expect(modified).toContain(`{"EN-US":{}}`);
   });
 
   it('should not alter content if default resource file does not exist', () => {
