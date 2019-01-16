@@ -19,9 +19,7 @@
     "url": "https://github.com/blackbaud/skyux-builder-plugin-skyux/issues"
   },
   "homepage": "https://github.com/blackbaud/skyux-builder-plugin-skyux#readme",
-  "peerDependencies": {
-    "@blackbaud/skyux-builder": "^1.28.0"
-  },
+  "peerDependencies": {},
   "dependencies": {
     "fs-extra": "7.0.0",
     "glob": "7.1.3"
