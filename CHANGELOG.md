@@ -1,3 +1,7 @@
+# 1.0.0-rc.6 (2019-01-18)
+
+- Removed `@blackbaud/skyux-builder` from package peer dependencies. [#9](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/9)
+
 # 1.0.0-rc.5 (2018-11-08)
 
 - Added support for `@skyux/i18n#3.3.0` (via `@blackbaud/skyux-builder`), which provides a `getStringForLocale` utility method. [#8](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/8)
