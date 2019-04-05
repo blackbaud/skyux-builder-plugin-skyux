@@ -1,3 +1,7 @@
+# 1.0.0 (2019-04-05)
+
+- Major version release.
+
 # 1.0.0-rc.6 (2019-01-18)
 
 - Removed `@blackbaud/skyux-builder` from package peer dependencies. [#9](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/9)
