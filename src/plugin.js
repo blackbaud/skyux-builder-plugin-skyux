@@ -32,6 +32,33 @@ function getLocaleFromFileName(fileName) {
   return locale;
 }
 
+function isPluginResource(resourcePath, fileNameRegex) {
+
+  // Resolve the resource path for Windows machines.
+  const resolvedPath = path.resolve(resourcePath);
+
+  // Directory used when serving or building.
+  const dir = path.join('src', 'app', 'public', 'plugin-resources');
+
+  // Directory used when building library.
+  const tempDir = path.join('.skypagestmp', 'plugin-resources');
+
+  if (
+    resolvedPath.indexOf(dir) === -1 &&
+    resolvedPath.indexOf(tempDir) === -1
+  ) {
+    return false;
+  }
+
+  return !!(fileNameRegex.test(resolvedPath));
+}
+
+function parseClassName(content) {
+  return content
+    .split('export class ')[1]
+    .split(' ')[0];
+}
+
 function SkyUXPlugin() {
   const resourceFilesContents = {};
   getLocaleFiles().forEach((file) => {
@@ -50,24 +77,10 @@ function SkyUXPlugin() {
       return content;
     }
 
-    // Resolve the resource path for Windows machines.
-    const resolvedPath = path.resolve(resourcePath);
-
-    // Directory used when serving or building.
-    const dir = path.join('src', 'app', 'public', 'plugin-resources');
-
-    // Directory used when building library.
-    const tempDir = path.join('.skypagestmp', 'plugin-resources');
-
-    if (
-      resolvedPath.indexOf(dir) === -1 &&
-      resolvedPath.indexOf(tempDir) === -1
-    ) {
-      return content;
-    }
-
-    const regexp = new RegExp(/(-resources-provider.ts)$/);
-    if (!regexp.test(resolvedPath)) {
+    if (!isPluginResource(
+      resourcePath,
+      /(-resources-provider.ts)$/
+    )) {
       return content;
     }
 
@@ -79,8 +92,7 @@ function SkyUXPlugin() {
       });
     });
 
-    let className = content.split('export class ')[1];
-    className = className.split(' ')[0];
+    const className = parseClassName(content);
 
     return `
 import {
@@ -105,12 +117,64 @@ export class ${className} implements SkyLibResourcesProvider {
   }
 }
 `;
+  };
+
+  const writeSourceCodeProvider = (content, resourcePath) => {
+
+    if (!isPluginResource(
+      resourcePath,
+      /(-source-code-provider.ts)$/
+    )) {
+      return content;
+    }
+
+    const results = glob.sync(
+      path.join('src/app/code-examples', '**', '*.{ts,js,html,scss}')
+    );
+
+    const sourceCode = results.map((filePath) => {
+      const rawContents = fs.readFileSync(
+        filePath,
+        { encoding: 'utf8' }
+      ).toString();
+
+      return {
+        fileName: path.basename(filePath),
+        filePath,
+        rawContents
+      };
+    });
+
+    const className = parseClassName(content);
+
+    return `import {
+  Injectable
+} from '@angular/core';
+
+import {
+  SkyDocsSourceCodeFile,
+  SkyDocsSourceCodeProvider
+} from '@skyux/docs-tools';
+
+@Injectable()
+export class ${className} implements SkyDocsSourceCodeProvider {
+
+  private files: SkyDocsSourceCodeFile[] = ${JSON.stringify(sourceCode)};
+
+  public getSourceCode(path: string): SkyDocsSourceCodeFile[] {
+    return this.files.filter((file) => {
+      return (file.filePath.indexOf(path) === 0);
+    });
   }
+}
+`;
+  };
 
   const preload = (content, resourcePath) => {
     let modified = content.toString();
 
     modified = writeResourcesProvider(modified, resourcePath);
+    modified = writeSourceCodeProvider(modified, resourcePath);
 
     return Buffer.from(modified, 'utf8');
   };
