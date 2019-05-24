@@ -133,17 +133,27 @@ export class ${className} implements SkyLibResourcesProvider {
     );
 
     const sourceCode = results.map((filePath) => {
-      const rawContents = fs.readFileSync(
+      let rawContents = fs.readFileSync(
         filePath,
         { encoding: 'utf8' }
       ).toString();
 
+      // Use encoding to prevent certain webpack plugins and
+      // loaders from manipulating the content.
+      // (Specifically, `angular2-template-loader` will add `require`
+      // statements to template and style URLs in the `@Component` decorator.)
+      rawContents = encodeURIComponent(rawContents);
+
+      const fileName = path.basename(filePath);
+
       return {
-        fileName: path.basename(filePath),
+        fileName,
         filePath,
         rawContents
       };
     });
+
+    const formattedSourceCode = JSON.stringify(sourceCode, undefined, 2);
 
     const className = parseClassName(content);
 
@@ -156,14 +166,16 @@ import {
   SkyDocsSourceCodeProvider
 } from '@skyux/docs-tools';
 
+const SOURCE_FILES: SkyDocsSourceCodeFile[] = ${formattedSourceCode};
+
 @Injectable()
 export class ${className} implements SkyDocsSourceCodeProvider {
-
-  private files: SkyDocsSourceCodeFile[] = ${JSON.stringify(sourceCode)};
-
   public getSourceCode(path: string): SkyDocsSourceCodeFile[] {
-    return this.files.filter((file) => {
+    return SOURCE_FILES.filter((file) => {
       return (file.filePath.indexOf(path) === 0);
+    }).map((file) => {
+      file.rawContents = decodeURIComponent(file.rawContents);
+      return file;
     });
   }
 }
