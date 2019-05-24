@@ -50,7 +50,7 @@ function isPluginResource(resourcePath, fileNameRegex) {
     return false;
   }
 
-  return !!(fileNameRegex.test(resolvedPath));
+  return fileNameRegex.test(resolvedPath);
 }
 
 function parseClassName(content) {
@@ -72,6 +72,11 @@ function SkyUXPlugin() {
   // See: https://stackoverflow.com/questions/234591/upper-vs-lower-case
   const resourceFilesExist = ('EN-US' in resourceFilesContents);
 
+  /**
+   * Writes the contents of locale resources JSON files to an Angular provider.
+   * @param {Buffer} content
+   * @param {string} resourcePath
+   */
   const writeResourcesProvider = (content, resourcePath) => {
     if (!resourceFilesExist) {
       return content;
@@ -119,6 +124,11 @@ export class ${className} implements SkyLibResourcesProvider {
 `;
   };
 
+  /**
+   * Writes the raw contents of any project files located in `./src/app/code-examples` to an Angular provider.
+   * @param {Buffer} content
+   * @param {string} resourcePath
+   */
   const writeSourceCodeProvider = (content, resourcePath) => {
 
     if (!isPluginResource(

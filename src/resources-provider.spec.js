@@ -1,7 +1,7 @@
 const mock = require('mock-require');
 const path = require('path');
 
-describe('Plugin', () => {
+describe('Resources provider', () => {
   let mockFsExtra;
   let mockGlob;
   let Plugin;
