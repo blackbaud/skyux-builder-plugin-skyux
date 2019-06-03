@@ -125,7 +125,7 @@ export class ${className} implements SkyLibResourcesProvider {
   };
 
   /**
-   * Writes the raw contents of any project files located in `./src/app/code-examples` to an Angular provider.
+   * Writes the raw contents of any project files located in `./src/app/public/code-examples` to an Angular provider.
    * @param {Buffer} content
    * @param {string} resourcePath
    */
