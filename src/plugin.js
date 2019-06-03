@@ -139,7 +139,7 @@ export class ${className} implements SkyLibResourcesProvider {
     }
 
     const results = glob.sync(
-      path.join('src/app/code-examples', '**', '*.{ts,js,html,scss}')
+      path.join('src/app/public/code-examples', '**', '*.{ts,js,html,scss}')
     );
 
     const sourceCode = results.map((filePath) => {
