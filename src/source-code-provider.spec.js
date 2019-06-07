@@ -21,7 +21,7 @@ describe('Source code provider', () => {
         switch (file) {
           default:
             return false;
-          case 'src/app/code-examples/sample.component.ts':
+          case 'src/app/public/code-examples/sample.component.ts':
             return `import { Component } from '@angular/core';
 @Component({
   selector: 'sample',
@@ -63,9 +63,9 @@ export class SampleDemoComponent {}
       switch (pattern) {
         default:
           return [];
-        case path.join('src/app/code-examples', '**', '*.{ts,js,html,scss}'):
+        case path.join('src/app/public/code-examples', '**', '*.{ts,js,html,scss}'):
           return [
-            'src/app/code-examples/sample.component.ts'
+            'src/app/public/code-examples/sample.component.ts'
           ];
       }
     });
@@ -77,7 +77,7 @@ export class SampleDemoComponent {}
     expect(modified).toContain(`const SOURCE_FILES: SkyDocsSourceCodeFile[] = [
   {
     "fileName": "sample.component.ts",
-    "filePath": "src/app/code-examples/sample.component.ts",
+    "filePath": "src/app/public/code-examples/sample.component.ts",
     "rawContents": "import%20%7B%20Component%20%7D%20from%20'%40angular%2Fcore'%3B%0A%40Component(%7B%0A%20%20selector%3A%20'sample'%2C%0A%20%20templateUrl%3A%20'.%2Fsample.component.html'%2C%0A%20%20styleUrls%3A%20%5B'.%2Fsample.component.scss'%5D%0A%7D)%0Aexport%20class%20SampleDemoComponent%20%7B%7D%0A"
   }
 ];`);
