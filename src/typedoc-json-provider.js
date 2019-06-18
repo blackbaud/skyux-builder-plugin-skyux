@@ -9,7 +9,7 @@ const utils = require('./utils');
  */
 function writeTypeDefinitionsProvider(content) {
 
-  const filePath = path.resolve(process.cwd(), '.typedoc-output/documentation.json');
+  const filePath = path.resolve(process.cwd(), '.skypagesdocs/documentation.json');
 
   const jsonContent = fs.readFileSync(
     filePath,
@@ -30,7 +30,7 @@ const typeDefinitions: any = ${jsonContent};
 
 @Injectable()
 export class ${className} implements SkyDocsDemoPageTypeDefinitionsProvider {
-  public getTypeDefinitions(path: string): any[] {
+  public getTypeDefinitions(): any[] {
     return typeDefinitions;
   }
 }

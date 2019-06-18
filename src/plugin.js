@@ -18,7 +18,7 @@ function SkyUXPlugin() {
   };
 
   const runCommand = () => {
-    const outputDir = '.typedoc-output';
+    const outputDir = '.skypagesdocs';
 
     rimraf.sync(outputDir);
 
