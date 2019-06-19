@@ -21,7 +21,8 @@ function SkyUXPlugin() {
   const runCommand = (command) => {
     if (
       command !== 'serve' &&
-      command !== 'build'
+      command !== 'build' &&
+      command !== 'build-public-library'
     ) {
       return;
     }
