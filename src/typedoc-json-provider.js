@@ -23,16 +23,12 @@ function writeTypeDefinitionsProvider(content) {
 } from '@angular/core';
 
 import {
-  SkyDocsDemoPageTypeDefinitionsProvider
+  SkyDocsTypeDefinitionsProvider
 } from '@skyux/docs-tools';
 
-const typeDefinitions: any = ${jsonContent};
-
 @Injectable()
-export class ${className} implements SkyDocsDemoPageTypeDefinitionsProvider {
-  public getTypeDefinitions(): any[] {
-    return typeDefinitions;
-  }
+export class ${className} implements SkyDocsTypeDefinitionsProvider {
+  public readonly typeDefinitions: any = ${jsonContent};
 }
 `;
 }

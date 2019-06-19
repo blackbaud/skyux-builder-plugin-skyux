@@ -44,22 +44,12 @@ function writeSourceCodeProvider(content) {
 } from '@angular/core';
 
 import {
-  SkyDocsSourceCodeFile,
   SkyDocsSourceCodeProvider
 } from '@skyux/docs-tools';
 
-const SOURCE_FILES: SkyDocsSourceCodeFile[] = ${formattedSourceCode};
-
 @Injectable()
 export class ${className} implements SkyDocsSourceCodeProvider {
-  public getSourceCode(path: string): SkyDocsSourceCodeFile[] {
-    return SOURCE_FILES.filter((file) => {
-      return (file.filePath.indexOf(path) === 0);
-    }).map((file) => {
-      file.rawContents = decodeURIComponent(file.rawContents);
-      return file;
-    });
-  }
+  public readonly sourceCode: any[] = ${formattedSourceCode};
 }
 `;
 }

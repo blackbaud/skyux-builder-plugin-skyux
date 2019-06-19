@@ -1,3 +1,4 @@
+const logger = require('@blackbaud/skyux-logger');
 const rimraf = require('rimraf');
 const TypeDoc = require('typedoc');
 
@@ -17,7 +18,16 @@ function SkyUXPlugin() {
     return Buffer.from(modified, 'utf8');
   };
 
-  const runCommand = () => {
+  const runCommand = (command) => {
+    if (
+      command !== 'serve' &&
+      command !== 'build'
+    ) {
+      return;
+    }
+
+    logger.info('Generating documentation...');
+
     const outputDir = '.skypagesdocs';
 
     rimraf.sync(outputDir);
@@ -49,6 +59,9 @@ function SkyUXPlugin() {
 
     if (project) {
       app.generateJson(project, `${outputDir}/documentation.json`);
+      logger.info('Done.');
+    } else {
+      logger.warn('Something bad happened.');
     }
   }
 
