@@ -6,6 +6,12 @@ const resourcesProviderPlugin = require('./resources-provider');
 const sourceCodeProviderPlugin = require('./source-code-provider');
 const typeDocJsonProviderPlugin = require('./typedoc-json-provider');
 
+const outputDir = '.skypagesdocs';
+
+function removeDocumentationFiles() {
+  rimraf.sync(outputDir);
+}
+
 function SkyUXPlugin() {
 
   const preload = (content, resourcePath) => {
@@ -29,9 +35,7 @@ function SkyUXPlugin() {
 
     logger.info('Generating documentation...');
 
-    const outputDir = '.skypagesdocs';
-
-    rimraf.sync(outputDir);
+    removeDocumentationFiles();
 
     const app = new TypeDoc.Application({
       exclude: [
@@ -64,6 +68,10 @@ function SkyUXPlugin() {
     } else {
       logger.warn('Something bad happened.');
     }
+
+    process.on('exit', () => {
+      removeDocumentationFiles();
+    });
   }
 
   return Object.freeze({
