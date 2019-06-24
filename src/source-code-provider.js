@@ -5,13 +5,17 @@ const path = require('path');
 const utils = require('./utils');
 
 /**
- * Writes the raw contents of any project files located in `./src/app/public/code-examples` to an Angular provider.
+ * Writes the raw contents of any project files located in `./src/app/public/plugin-resources/code-examples` to an Angular provider.
  * @param {string} content
  */
 function writeSourceCodeProvider(content) {
 
   const results = glob.sync(
-    path.join('src/app/public/code-examples', '**', '*.{ts,js,html,scss}')
+    path.join(
+      'src/app/public/plugin-resources/code-examples',
+      '**',
+      '*.{ts,js,html,scss}'
+    )
   );
 
   const sourceCode = results.map((filePath) => {
