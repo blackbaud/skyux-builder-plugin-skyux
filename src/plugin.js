@@ -26,9 +26,8 @@ function SkyUXPlugin() {
 
   const runCommand = (command) => {
     if (
-      command !== 'serve' &&
-      command !== 'build' &&
-      command !== 'build-public-library'
+      command === 'test' ||
+      command === 'watch'
     ) {
       return;
     }
