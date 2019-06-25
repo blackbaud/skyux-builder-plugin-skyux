@@ -9,7 +9,7 @@ const utils = require('./utils');
  */
 function writeTypeDefinitionsProvider(content) {
 
-  const filePath = path.resolve(process.cwd(), '.skypagesdocs/documentation.json');
+  const filePath = path.resolve('.skypagesdocs/documentation.json');
 
   const jsonContent = fs.readFileSync(
     filePath,
