@@ -1,4 +1,5 @@
 const logger = require('@blackbaud/skyux-logger');
+const fs = require('fs-extra');
 const rimraf = require('rimraf');
 const TypeDoc = require('typedoc');
 
@@ -10,6 +11,25 @@ const outputDir = '.skypagesdocs';
 
 function removeDocumentationFiles() {
   rimraf.sync(outputDir);
+}
+
+function parseFriendlyUrlFragment(value) {
+  if (!value) {
+    return;
+  }
+
+  const friendly = value.toLowerCase()
+
+    // Remove special characters.
+    .replace(/[\_\~\`\@\!\#\$\%\^\&\*\(\)\[\]\{\}\;\:\'\/\\\<\>\,\.\?\=\+\|"]/g, '')
+
+    // Replace space characters with a dash.
+    .replace(/\s/g, '-')
+
+    // Remove any double-dashes.
+    .replace(/--/g, '-');
+
+  return friendly;
 }
 
 function SkyUXPlugin() {
@@ -61,8 +81,58 @@ function SkyUXPlugin() {
       ])
     );
 
+    // Remove any type that is marked as `@internal`.
+    project.children = project.children.filter((child) => {
+
+      if (child.comment && child.comment.tags) {
+        const foundInternalType = child.comment.tags.find((tag) => {
+          return (tag.tagName === 'internal');
+        });
+
+        if (foundInternalType) {
+          return false;
+        }
+      }
+
+      // Look for properties.
+      // child.children = child.children.filter((property) => {
+      //   if (property.kindString === 'Property') {
+      //   }
+      // });
+
+      return true;
+    });
+
     if (project) {
-      app.generateJson(project, `${outputDir}/documentation.json`);
+      const jsonPath = `${outputDir}/documentation.json`;
+
+      app.generateJson(project, jsonPath);
+
+      const jsonContents = fs.readJsonSync(jsonPath);
+
+      const anchorIdMap = {};
+
+      // Create element IDs to be used for inner-page linking.
+      jsonContents.children.forEach((child) => {
+        const kindString = parseFriendlyUrlFragment(child.kindString);
+        const friendlyName = parseFriendlyUrlFragment(child.name);
+        const anchorId = `${kindString}-${friendlyName}`;
+        child.anchorId = anchorId;
+        anchorIdMap[child.name] = anchorId;
+      });
+
+      jsonContents.children.forEach((child) => {
+        if (child.comment && child.comment.shortText) {
+          const match = child.comment.shortText.match(/\[\[.*\]\]/);
+          if (match) {
+            const replacement = match[0].replace('[[', '[').replace(']]', `](#${anchorIdMap[child.name]})`);
+            child.comment.shortText = child.comment.shortText.replace(match[0], replacement);
+          }
+        }
+      });
+
+      fs.writeJsonSync(jsonPath, jsonContents);
+
       logger.info('Done.');
     } else {
       logger.warn('Something bad happened.');
