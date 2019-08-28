@@ -21,7 +21,7 @@ function parseFriendlyUrlFragment(value) {
   const friendly = value.toLowerCase()
 
     // Remove special characters.
-    .replace(/[\_\~\`\@\!\#\$\%\^\&\*\(\)\[\]\{\}\;\:\'\/\\\<\>\,\.\?\=\+\|"]/g, '')
+    .replace(/[_~`@!#$%^&*()[\]{};:'/\\<>,.?=+|"]/g, '')
 
     // Replace space characters with a dash.
     .replace(/\s/g, '-')
@@ -121,11 +121,16 @@ function SkyUXPlugin() {
         anchorIdMap[child.name] = anchorId;
       });
 
+      // Replace all instances of '[[]]' with the link to the element.
+      // TODO: This is broken because Angular strips out custom attributes on the anchor.
+      // We'll need to push the ID map to an Angular service and build the anchors at runtime.
       jsonContents.children.forEach((child) => {
         if (child.comment && child.comment.shortText) {
           const match = child.comment.shortText.match(/\[\[.*\]\]/);
           if (match) {
-            const replacement = match[0].replace('[[', '[').replace(']]', `](#${anchorIdMap[child.name]})`);
+            const typeName = match[0].replace('[[', '').replace(']]', '');
+            const anchorId = anchorIdMap[typeName];
+            const replacement = match[0].replace('[[', `<a class="sky-docs-page-anchor" href="#${anchorId}">`).replace(']]', '</a>');
             child.comment.shortText = child.comment.shortText.replace(match[0], replacement);
           }
         }
