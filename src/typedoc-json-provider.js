@@ -11,10 +11,10 @@ function writeTypeDefinitionsProvider(content) {
 
   const filePath = path.resolve('.skypagesdocs/documentation.json');
 
-  const jsonContent = fs.readFileSync(
+  const jsonContent = fs.readJsonSync(
     filePath,
     { encoding: 'utf8' }
-  ).toString();
+  );
 
   const className = utils.parseClassName(content);
 
@@ -28,7 +28,11 @@ import {
 
 @Injectable()
 export class ${className} implements SkyDocsTypeDefinitionsProvider {
-  public readonly typeDefinitions: any = ${jsonContent};
+
+  public readonly anchorIds: {[_: string]: string} = ${JSON.stringify(jsonContent.anchorIds)};
+
+  public readonly typeDefinitions: any[] = ${JSON.stringify(jsonContent.children)};
+
 }
 `;
 }
