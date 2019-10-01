@@ -15,8 +15,8 @@ function readJson(file) {
 
   const buffer = fs.readFileSync(file);
 
-  let contents;
   // Is the locale file empty?
+  let contents;
   if (buffer.length === 0) {
     contents = {};
   } else {
