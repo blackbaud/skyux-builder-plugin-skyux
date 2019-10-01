@@ -28,11 +28,8 @@ import {
 
 @Injectable()
 export class ${className} implements SkyDocsTypeDefinitionsProvider {
-
   public readonly anchorIds: {[_: string]: string} = ${JSON.stringify(jsonContent.anchorIds)};
-
   public readonly typeDefinitions: any[] = ${JSON.stringify(jsonContent.children)};
-
 }
 `;
 }

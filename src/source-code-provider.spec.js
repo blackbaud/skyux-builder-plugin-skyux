@@ -81,4 +81,14 @@ export class SampleDemoComponent {}
   }
 ];`);
   });
+
+  it('should not alter content if file is not named correctly', () => {
+    const content = Buffer.from(defaultContent, 'utf8');
+    const resourcePath = path.join('src', 'app', 'public', 'plugin-resources', 'foo.text');
+
+    const plugin = mock.reRequire('./source-code-provider');
+    const modified = plugin.preload(content, resourcePath);
+
+    expect(content).toEqual(modified);
+  });
 });
