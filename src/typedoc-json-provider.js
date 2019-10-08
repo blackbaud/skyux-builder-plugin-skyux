@@ -3,13 +3,15 @@ const path = require('path');
 
 const utils = require('./utils');
 
+const { outputDir } = require('./documentation-generator');
+
 /**
  * Writes the contents of TypeDoc JSON file to an Angular provider.
  * @param {string} content
  */
 function writeTypeDefinitionsProvider(content) {
 
-  const filePath = path.resolve('.skypagesdocs/documentation.json');
+  const filePath = path.resolve(`${outputDir}/documentation.json`);
 
   const jsonContent = fs.readJsonSync(
     filePath,

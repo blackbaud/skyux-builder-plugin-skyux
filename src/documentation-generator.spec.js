@@ -1,3 +1,4 @@
+const path = require('path');
 const mock = require('mock-require');
 
 describe('Documentation generator', function () {
@@ -82,7 +83,7 @@ describe('Documentation generator', function () {
     generator.generateDocumentationFiles();
 
     expect(expandSpy).toHaveBeenCalledWith(['src/app/public']);
-    expect(generateSpy).toHaveBeenCalledWith({ children: [] }, '.skypagesdocs/documentation.json');
+    expect(generateSpy).toHaveBeenCalledWith({ children: [] }, path.join(generator.outputDir, 'documentation.json'));
   });
 
   it('should remove any properties marked with `@internal` tag', function () {
@@ -146,7 +147,7 @@ describe('Documentation generator', function () {
           anchorId: 'enumeration-baztype'
         }
       ]
-    }, '.skypagesdocs/documentation.json');
+    }, path.join(generator.outputDir, 'documentation.json'));
   });
 
   it('should generate anchor IDs for each type', function () {
@@ -197,7 +198,7 @@ describe('Documentation generator', function () {
           anchorId: 'typealias-undefined'
         }
       ]
-    }, '.skypagesdocs/documentation.json');
+    }, path.join(generator.outputDir, 'documentation.json'));
   });
 
   it('should warn if project generation fails', function () {
@@ -217,6 +218,6 @@ describe('Documentation generator', function () {
 
     triggerProcessOn('SIGINT');
 
-    expect(spy).toHaveBeenCalledWith('.skypagesdocs');
+    expect(spy).toHaveBeenCalledWith(generator.outputDir);
   });
 });
