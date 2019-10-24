@@ -9,20 +9,27 @@ function removeDocumentationFiles() {
   rimraf.sync(outputDir);
 }
 
+function isInternal(type) {
+  if (type.comment && type.comment.tags) {
+    const foundInternalType = type.comment.tags.find((tag) => {
+      return (tag.tagName === 'internal');
+    });
+
+    if (foundInternalType) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 // Remove any type that is marked as `@internal`.
 function removeInternalTypes(project) {
-  project.children = project.children.filter((type) => {
-    if (type.comment && type.comment.tags) {
-      const foundInternalType = type.comment.tags.find((tag) => {
-        return (tag.tagName === 'internal');
-      });
-
-      if (foundInternalType) {
-        return false;
-      }
+  project.children = project.children.filter(isInternal);
+  project.children.forEach((type) => {
+    if (type.children) {
+      type.children = type.children.filter(isInternal);
     }
-
-    return true;
   });
 }
 

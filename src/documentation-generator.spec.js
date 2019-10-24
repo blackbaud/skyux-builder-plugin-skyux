@@ -86,7 +86,7 @@ describe('Documentation generator', function () {
     expect(generateSpy).toHaveBeenCalledWith({ children: [] }, path.join(generator.outputDir, 'documentation.json'));
   });
 
-  it('should remove any properties marked with `@internal` tag', function () {
+  it('should remove any types or properties marked with `@internal` tag', function () {
     mockTypes = [
       {
         name: 'FooType',
@@ -115,7 +115,19 @@ describe('Documentation generator', function () {
         kindString: 'Enumeration',
         comment: {
           shortText: 'This is the comment.'
-        }
+        },
+        children: [
+          {
+            name: 'internalProperty',
+            comment: {
+              tags: [
+                {
+                  tagName: 'internal'
+                }
+              ]
+            }
+          }
+        ]
       }
     ];
 
@@ -144,7 +156,8 @@ describe('Documentation generator', function () {
           comment: {
             shortText: 'This is the comment.'
           },
-          anchorId: 'enumeration-baztype'
+          anchorId: 'enumeration-baztype',
+          children: []
         }
       ]
     }, path.join(generator.outputDir, 'documentation.json'));
