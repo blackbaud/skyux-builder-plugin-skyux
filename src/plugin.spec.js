@@ -53,7 +53,11 @@ describe('Plugin', function () {
     const buffer = Buffer.from('foobar', 'utf8');
     const resourcePath = '/resource-path';
 
-    plugin.preload(buffer, resourcePath);
+    plugin.preload(buffer, resourcePath, {
+      runtime: {
+        command: 'serve'
+      }
+    });
 
     expect(resourcesProviderSpy).toHaveBeenCalledWith(buffer.toString(), resourcePath);
     expect(sourceCodeProviderSpy).toHaveBeenCalledWith(buffer.toString(), resourcePath);
@@ -81,5 +85,27 @@ describe('Plugin', function () {
     plugin.runCommand('watch');
 
     expect(documentationGeneratorSpy).not.toHaveBeenCalled();
+  });
+
+  it('should not run all Builder plugins for specific commands', function () {
+    const resourcesProviderSpy = spyOn(mockResourcesProvider, 'preload').and.callThrough();
+    const sourceCodeProviderSpy = spyOn(mockSourceCodeProvider, 'preload').and.callThrough();
+    const typeDocJsonProviderSpy = spyOn(mockTypeDocJsonProvider, 'preload').and.callThrough();
+
+    const obj = mock.reRequire('./plugin');
+    const plugin = new obj.SkyUXPlugin();
+
+    const buffer = Buffer.from('foobar', 'utf8');
+    const resourcePath = '/resource-path';
+
+    plugin.preload(buffer, resourcePath, {
+      runtime: {
+        command: 'build-public-library'
+      }
+    });
+
+    expect(resourcesProviderSpy).toHaveBeenCalledWith(buffer.toString(), resourcePath);
+    expect(sourceCodeProviderSpy).not.toHaveBeenCalled();
+    expect(typeDocJsonProviderSpy).not.toHaveBeenCalled();
   });
 });

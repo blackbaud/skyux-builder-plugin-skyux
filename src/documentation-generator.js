@@ -3,7 +3,7 @@ const fs = require('fs-extra');
 const rimraf = require('rimraf');
 const TypeDoc = require('typedoc');
 
-const outputDir = '.skypagesdocs';
+const outputDir = '.skypagestmp/docs';
 
 function removeDocumentationFiles() {
   rimraf.sync(outputDir);

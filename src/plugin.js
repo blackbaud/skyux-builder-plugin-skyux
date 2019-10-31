@@ -5,24 +5,33 @@ const typeDocJsonProviderPlugin = require('./typedoc-json-provider');
 
 function SkyUXPlugin() {
 
-  const preload = (content, resourcePath) => {
+  const preload = (content, resourcePath, config) => {
     let modified = content.toString();
+
     modified = resourcesProviderPlugin.preload(modified, resourcePath);
-    modified = sourceCodeProviderPlugin.preload(modified, resourcePath);
-    modified = typeDocJsonProviderPlugin.preload(modified, resourcePath);
+
+    switch (config.runtime.command) {
+      case 'serve':
+      case 'build':
+        modified = sourceCodeProviderPlugin.preload(modified, resourcePath);
+        modified = typeDocJsonProviderPlugin.preload(modified, resourcePath);
+        break;
+      default:
+        break;
+    }
 
     return Buffer.from(modified, 'utf8');
   };
 
   const runCommand = (command) => {
-    if (
-      command === 'test' ||
-      command === 'watch'
-    ) {
-      return;
+    switch (command) {
+      case 'serve':
+      case 'build':
+        documentationGenerator.generateDocumentationFiles();
+        break;
+      default:
+        break;
     }
-
-    documentationGenerator.generateDocumentationFiles();
   }
 
   return Object.freeze({
