@@ -1,3 +1,8 @@
+# 1.1.0 (2019-11-05)
+
+- Added a [TypeDoc](https://typedoc.org/) documentation provider and generator (used by the SKY UX CLI). [#11](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/11)
+- Added a source code provider (for documentation code examples). [#11](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/11)
+
 # 1.0.0 (2019-04-05)
 
 - Major version release.
