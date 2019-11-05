@@ -1,147 +1,111 @@
 const mock = require('mock-require');
-const path = require('path');
 
-describe('Plugin', () => {
-  let mockFsExtra;
-  let mockGlob;
-  let Plugin;
-
-  const defaultContent = 'export class SkySampleResourcesProvider implements SkyLibResourcesProvider';
-  const defaultResourcePath = path.join('src', 'app', 'public', 'plugin-resources', 'foo-resources-provider.ts');
+describe('Plugin', function () {
+  let mockDocumentationGenerator;
+  let mockResourcesProvider;
+  let mockSourceCodeProvider;
+  let mockTypeDocJsonProvider;
 
   beforeEach(() => {
-    mockFsExtra = {
-      ensureFileSync: () => {
-        return true;
-      },
-      pathExistsSync: () => {
-        return true;
-      },
-      readFileSync: (file) => {
-        let json;
-
-        switch (file) {
-          case 'resources_en_US.json':
-            json = {
-              greeting: {
-                message: 'hello'
-              }
-            };
-          break;
-          case 'resources_fr_CA.json':
-            json = {
-              greeting: {
-                message: 'bonjour'
-              }
-            };
-          break;
-          default:
-            json = {};
-          break;
-        }
-
-        return JSON.stringify(json);
-      }
+    mockDocumentationGenerator = {
+      generateDocumentationFiles() {}
+    };
+    mockResourcesProvider = {
+      preload: (content) => content
+    };
+    mockSourceCodeProvider = {
+      preload: (content) => content
+    };
+    mockTypeDocJsonProvider = {
+      preload: (content) => content
     };
 
-    mockGlob = {
-      sync: () => {
-        return [
-          'resources_en_US.json',
-          'resources_fr_CA.json'
-        ];
-      }
-    };
-
-    mock('fs-extra', mockFsExtra);
-    mock('glob', mockGlob);
-
-    Plugin = mock.reRequire('./plugin').SkyUXPlugin;
+    mock('./documentation-generator', mockDocumentationGenerator);
+    mock('./resources-provider', mockResourcesProvider);
+    mock('./source-code-provider', mockSourceCodeProvider);
+    mock('./typedoc-json-provider', mockTypeDocJsonProvider);
   });
 
   afterEach(() => {
     mock.stopAll();
   });
 
-  it('should contain a preload hook', () => {
-    const plugin = new Plugin();
-    expect(plugin.preload).toBeDefined();
+  it('should export a Builder preload hook', function () {
+    const obj = mock.reRequire('./plugin');
+    const plugin = new obj.SkyUXPlugin();
+    expect(typeof plugin.preload).toEqual('function');
   });
 
-  it('should inject contents of resource files', () => {
-    const plugin = new Plugin();
-    const content = Buffer.from(defaultContent, 'utf8');
-    const modified = plugin.preload(content, defaultResourcePath);
-
-    expect(modified).toContain(`{"EN-US":{"greeting":"hello"},"FR-CA":{"greeting":"bonjour"}}`);
+  it('should export a CLI callback', function () {
+    const obj = mock.reRequire('./plugin');
+    const plugin = new obj.SkyUXPlugin();
+    expect(typeof plugin.runCommand).toEqual('function');
   });
 
-  it('should handle files located in .skypagestmp directory', () => {
-    const resourcePath = path.join('.skypagestmp', 'plugin-resources', 'foo-resources-provider.ts');
-    const plugin = new Plugin();
-    const content = Buffer.from(defaultContent, 'utf8');
-    const modified = plugin.preload(content, resourcePath);
+  it('should run all Builder plugins', function () {
+    const resourcesProviderSpy = spyOn(mockResourcesProvider, 'preload').and.callThrough();
+    const sourceCodeProviderSpy = spyOn(mockSourceCodeProvider, 'preload').and.callThrough();
+    const typeDocJsonProviderSpy = spyOn(mockTypeDocJsonProvider, 'preload').and.callThrough();
 
-    expect(modified).toContain(`{"EN-US":{"greeting":"hello"},"FR-CA":{"greeting":"bonjour"}}`);
+    const obj = mock.reRequire('./plugin');
+    const plugin = new obj.SkyUXPlugin();
+
+    const buffer = Buffer.from('foobar', 'utf8');
+    const resourcePath = '/resource-path';
+
+    plugin.preload(buffer, resourcePath, {
+      runtime: {
+        command: 'serve'
+      }
+    });
+
+    expect(resourcesProviderSpy).toHaveBeenCalledWith(buffer.toString(), resourcePath);
+    expect(sourceCodeProviderSpy).toHaveBeenCalledWith(buffer.toString(), resourcePath);
+    expect(typeDocJsonProviderSpy).toHaveBeenCalledWith(buffer.toString(), resourcePath);
   });
 
-  it('should populate the `getString` method', () => {
-    const plugin = new Plugin();
-    const content = Buffer.from(`
-export class SkySampleResourcesProvider implements SkyLibResourcesProvider {
-  public getString: () => string;
-}
-`, 'utf8');
-    const modified = plugin.preload(content, defaultResourcePath);
+  it('should run all CLI plugins', function () {
+    const documentationGeneratorSpy = spyOn(mockDocumentationGenerator, 'generateDocumentationFiles').and.callThrough();
 
-    expect(modified).toContain(`public getString(localeInfo: SkyAppLocaleInfo, name: string): string {`);
+    const obj = mock.reRequire('./plugin');
+    const plugin = new obj.SkyUXPlugin();
+
+    plugin.runCommand('serve');
+
+    expect(documentationGeneratorSpy).toHaveBeenCalled();
   });
 
-  it('should handle empty resources files', () => {
-    spyOn(mockGlob, 'sync').and.returnValue(['resources_en_US.json']);
-    spyOn(mockFsExtra, 'readFileSync').and.returnValue('');
+  it('should not run CLI plugin during tests', function () {
+    const documentationGeneratorSpy = spyOn(mockDocumentationGenerator, 'generateDocumentationFiles').and.callThrough();
 
-    const plugin = new Plugin();
-    const content = Buffer.from(defaultContent, 'utf8');
-    const modified = plugin.preload(content, defaultResourcePath);
+    const obj = mock.reRequire('./plugin');
+    const plugin = new obj.SkyUXPlugin();
 
-    expect(modified).toContain(`{"EN-US":{}}`);
+    plugin.runCommand('test');
+    plugin.runCommand('watch');
+
+    expect(documentationGeneratorSpy).not.toHaveBeenCalled();
   });
 
-  it('should not alter content if default resource file does not exist', () => {
-    spyOn(mockGlob, 'sync').and.returnValue(['resources_foo_BAR.json']);
+  it('should not run all Builder plugins for specific commands', function () {
+    const resourcesProviderSpy = spyOn(mockResourcesProvider, 'preload').and.callThrough();
+    const sourceCodeProviderSpy = spyOn(mockSourceCodeProvider, 'preload').and.callThrough();
+    const typeDocJsonProviderSpy = spyOn(mockTypeDocJsonProvider, 'preload').and.callThrough();
 
-    const plugin = new Plugin();
-    const content = Buffer.from(defaultContent, 'utf8');
-    const modified = plugin.preload(content, defaultResourcePath);
+    const obj = mock.reRequire('./plugin');
+    const plugin = new obj.SkyUXPlugin();
 
-    expect(content).toEqual(modified);
-  });
+    const buffer = Buffer.from('foobar', 'utf8');
+    const resourcePath = '/resource-path';
 
-  it('should not alter content if file not in correct directory', () => {
-    const plugin = new Plugin();
-    const content = Buffer.from(`export class FooBar {}`, 'utf8');
-    const modified = plugin.preload(content, 'foo.txt');
+    plugin.preload(buffer, resourcePath, {
+      runtime: {
+        command: 'build-public-library'
+      }
+    });
 
-    expect(content).toEqual(modified);
-  });
-
-  it('should not alter content if file is not named correctly', () => {
-    const plugin = new Plugin();
-    const content = Buffer.from(`export class FooBar {}`, 'utf8');
-    const resourcePath = path.join('src', 'app', 'public', 'plugin-resources', 'foo.text');
-    const modified = plugin.preload(content, resourcePath);
-
-    expect(content).toEqual(modified);
-  });
-
-  it('should resolve resource paths', () => {
-    const plugin = new Plugin();
-    const content = Buffer.from(defaultContent, 'utf8');
-    const spy = spyOn(path, 'resolve').and.callThrough();
-
-    plugin.preload(content, defaultResourcePath);
-
-    expect(spy).toHaveBeenCalledWith(defaultResourcePath);
+    expect(resourcesProviderSpy).toHaveBeenCalledWith(buffer.toString(), resourcePath);
+    expect(sourceCodeProviderSpy).not.toHaveBeenCalled();
+    expect(typeDocJsonProviderSpy).not.toHaveBeenCalled();
   });
 });
