@@ -8,7 +8,7 @@ function preload(content, resourcePath) {
 
   let modified = content.toString();
 
-  // Don't modify the module if the user add providers manually.
+  // Don't modify the module if the user adds providers manually.
   const hasSourceCodeProvider = /SkyDocsSourceCodeProvider/.test(modified);
   const hasTypeDocJsonProvider = /SkyDocsTypeDefinitionsProvider/.test(modified);
   if (hasSourceCodeProvider && hasTypeDocJsonProvider) {
@@ -64,7 +64,7 @@ function preload(content, resourcePath) {
     ngModuleSource = ngModuleSource.replace(ngModuleSourceStart, ngModuleSourceStart + providersSource);
   }
 
-  // Apply changes.
+  // Apply any changes.
   const providersSourceStart = providersSource.substr(0, providersSource.indexOf('[') + 1);
   const providersSourceEnd = providersSource.substring(providersSourceStart.length, providersSource.indexOf(']') + 1);
   ngModuleSource = ngModuleSource.replace(
