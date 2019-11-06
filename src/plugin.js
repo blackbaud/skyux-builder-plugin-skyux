@@ -1,4 +1,5 @@
 const documentationGenerator = require('./documentation-generator');
+const documentationProvidersPlugin = require('./documentation-providers');
 const resourcesProviderPlugin = require('./resources-provider');
 const sourceCodeProviderPlugin = require('./source-code-provider');
 const typeDocJsonProviderPlugin = require('./typedoc-json-provider');
@@ -15,6 +16,7 @@ function SkyUXPlugin() {
       case 'build':
         modified = sourceCodeProviderPlugin.preload(modified, resourcePath);
         modified = typeDocJsonProviderPlugin.preload(modified, resourcePath);
+        modified = documentationProvidersPlugin.preload(modified, resourcePath);
         break;
       default:
         break;
