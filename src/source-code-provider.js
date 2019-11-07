@@ -5,11 +5,9 @@ const path = require('path');
 const utils = require('./utils');
 
 /**
- * Writes the raw contents of any project files located in `./src/app/public/plugin-resources/code-examples` to an Angular provider.
- * @param {string} content
+ * Reads the raw contents of any project files located in `./src/app/public/plugin-resources/code-examples`.
  */
-function writeSourceCodeProvider(content) {
-
+function getCodeExamplesSourceCode() {
   const results = glob.sync(
     path.join(
       'src/app/public/plugin-resources/code-examples',
@@ -39,8 +37,11 @@ function writeSourceCodeProvider(content) {
     };
   });
 
-  const formattedSourceCode = JSON.stringify(sourceCode, undefined, 2);
+  return JSON.stringify(sourceCode, undefined, 2);
+}
 
+function writeSourceCodeProvider(content) {
+  const formattedSourceCode = getCodeExamplesSourceCode();
   const className = utils.parseClassName(content);
 
   return `import {
@@ -75,5 +76,6 @@ function preload(content, resourcePath) {
 }
 
 module.exports = {
+  getCodeExamplesSourceCode,
   preload
 };

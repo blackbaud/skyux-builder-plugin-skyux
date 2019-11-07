@@ -5,19 +5,20 @@ const utils = require('./utils');
 
 const { outputDir } = require('./documentation-generator');
 
+function getDocumentationConfig() {
+  const filePath = path.resolve(`${outputDir}/documentation.json`);
+  return fs.readJsonSync(filePath, {
+    encoding: 'utf8'
+  });
+}
+
 /**
  * Writes the contents of TypeDoc JSON file to an Angular provider.
  * @param {string} content
  */
 function writeTypeDefinitionsProvider(content) {
 
-  const filePath = path.resolve(`${outputDir}/documentation.json`);
-
-  const jsonContent = fs.readJsonSync(
-    filePath,
-    { encoding: 'utf8' }
-  );
-
+  const jsonContent = getDocumentationConfig();
   const className = utils.parseClassName(content);
 
   return `import {
@@ -53,5 +54,6 @@ function preload(content, resourcePath) {
 }
 
 module.exports = {
+  getDocumentationConfig,
   preload
 };
