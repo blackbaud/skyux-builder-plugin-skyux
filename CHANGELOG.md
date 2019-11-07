@@ -1,3 +1,8 @@
+# 1.2.0 (2019-11-07)
+
+- Added the documentation providers plugin to automatically provide the source code and TypeDoc JSON providers if the consuming application omits them. [#16](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/16)
+- Fixed the source code and TypeDoc JSON providers to only run if `@skyux/docs-tools` is installed in the consuming application. [#16](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/16)
+
 # 1.1.0 (2019-11-05)
 
 - Added a [TypeDoc](https://typedoc.org/) documentation provider and generator for the SKY UX CLI. [#11](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/11)
