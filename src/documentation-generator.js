@@ -60,8 +60,7 @@ function generateDocumentationFiles() {
       'node_modules',
       '**/fixtures/**',
       '**/*.spec.ts',
-      '**/plugin-resources/**',
-      '**/code-examples/**'
+      '**/plugin-resources/**'
     ],
     excludeExternals: true,
     excludeNotExported: true,
