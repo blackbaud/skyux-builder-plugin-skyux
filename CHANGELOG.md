@@ -1,6 +1,6 @@
 # 1.2.1 (2019-11-13)
 
-- Fixed the TypeDoc config to include `code-examples` directory. [#18](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/18)
+- Fixed the TypeDoc config to include the `code-examples` directory. [#18](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/18)
 
 # 1.2.0 (2019-11-07)
 
