@@ -1,3 +1,7 @@
+# 1.2.2 (2020-02-06)
+
+- Adjusted the installation warning message to communicate that the `@skyux/docs-tools` package is optional. [#21](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/21)
+
 # 1.2.1 (2019-11-13)
 
 - Fixed the TypeDoc config to include the `code-examples` directory. [#18](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/18)
