@@ -20,8 +20,7 @@ function SkyUXPlugin() {
       doGenerateDocs = true;
     } catch (e) {
       logger.warn(
-        '[WARNING] Documentation will not be generated for this library because the required NPM package `@skyux/docs-tools` was not found. ' +
-        'Please install it as a development dependency: `npm i --save-exact --save-dev @skyux/docs-tools`.'
+        'This library will not generate documentation because it does not include the optional `@skyux/docs-tools` NPM package. To generate documentation, please install the package as a development dependency: `npm i --save-exact --save-dev @skyux/docs-tools@latest`.'
       );
     }
   }
