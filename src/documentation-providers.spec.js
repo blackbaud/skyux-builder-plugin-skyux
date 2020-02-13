@@ -13,6 +13,7 @@ export class AppExtrasModule { }
   beforeEach(() => {
     mockFsExtra = {
       ensureFileSync: () => true,
+      existsSync: () => true,
       pathExistsSync: () => true,
       readJsonSync: () => ({
         anchorIds: {},

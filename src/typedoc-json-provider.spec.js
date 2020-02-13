@@ -17,6 +17,7 @@ describe('TypeDoc JSON provider', function () {
     };
 
     mockFsExtra = {
+      existsSync: () => true,
       readJsonSync: () => mockJsonContent
     };
 
