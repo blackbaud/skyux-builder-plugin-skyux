@@ -47,6 +47,18 @@ describe('TypeDoc JSON provider', function () {
   public readonly typeDefinitions: any[] = [{"name":"FooType"}];`);
   });
 
+  it('should handle documentation.json not found', () => {
+    const content = Buffer.from(defaultContent, 'utf8');
+
+    spyOn(mockFsExtra, 'existsSync').and.returnValue(false);
+    const readSpy = spyOn(mockFsExtra, 'readJsonSync').and.callThrough();
+
+    const plugin = mock.reRequire(PLUGIN_PATH);
+    plugin.preload(content, defaultFilePath).toString();
+
+    expect(readSpy).not.toHaveBeenCalled();
+  });
+
   it('should not alter content if file is not named correctly', () => {
     const content = Buffer.from(defaultContent, 'utf8');
     const resourcePath = path.join('src', 'app', 'public', 'plugin-resources', 'foo.text');
