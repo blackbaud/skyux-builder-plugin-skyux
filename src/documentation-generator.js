@@ -55,7 +55,9 @@ function parseFriendlyUrlFragment(value) {
 function generateDocumentationFiles() {
   logger.info('Generating documentation...');
 
-  const app = new TypeDoc.Application({
+  const app = new TypeDoc.Application();
+
+  app.bootstrap({
     exclude: [
       'node_modules',
       '**/fixtures/**',
