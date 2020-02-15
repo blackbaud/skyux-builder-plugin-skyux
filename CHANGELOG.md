@@ -1,3 +1,8 @@
+# 1.3.0 (2020-02-15)
+
+- Added support for `TypeDoc@0.16.9`. [#22](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/22)
+- Removed deep imports into `@skyux/i18n`. [#22](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/22)
+
 # 1.2.2 (2020-02-06)
 
 - Adjusted the installation warning message to communicate that the `@skyux/docs-tools` package is optional. [#21](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/21)
