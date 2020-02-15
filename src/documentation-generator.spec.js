@@ -16,6 +16,7 @@ describe('Documentation generator', function () {
 
   beforeEach(function () {
     mockApplication = {
+      bootstrap() {},
       convert() {
         return {
           children: mockTypes

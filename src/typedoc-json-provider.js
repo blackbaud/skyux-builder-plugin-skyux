@@ -7,6 +7,11 @@ const { outputDir } = require('./documentation-generator');
 
 function getDocumentationConfig() {
   const filePath = path.resolve(`${outputDir}/documentation.json`);
+
+  if (!fs.existsSync(filePath)) {
+    return {};
+  }
+
   return fs.readJsonSync(filePath, {
     encoding: 'utf8'
   });

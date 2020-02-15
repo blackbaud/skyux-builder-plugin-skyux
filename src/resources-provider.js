@@ -68,13 +68,10 @@ import {
 } from '@angular/core';
 
 import {
+  getStringForLocale,
   SkyAppLocaleInfo,
   SkyLibResourcesProvider
 } from '@skyux/i18n';
-
-import {
-  getStringForLocale
-} from '@skyux/i18n/modules/i18n/get-string-for-locale';
 
 @Injectable()
 export class ${className} implements SkyLibResourcesProvider {

@@ -17,6 +17,7 @@ describe('TypeDoc JSON provider', function () {
     };
 
     mockFsExtra = {
+      existsSync: () => true,
       readJsonSync: () => mockJsonContent
     };
 
@@ -44,6 +45,18 @@ describe('TypeDoc JSON provider', function () {
 
     expect(modified).toContain(`public readonly anchorIds: {[_: string]: string} = {"foo":"foo-id"};
   public readonly typeDefinitions: any[] = [{"name":"FooType"}];`);
+  });
+
+  it('should handle documentation.json not found', () => {
+    const content = Buffer.from(defaultContent, 'utf8');
+
+    spyOn(mockFsExtra, 'existsSync').and.returnValue(false);
+    const readSpy = spyOn(mockFsExtra, 'readJsonSync').and.callThrough();
+
+    const plugin = mock.reRequire(PLUGIN_PATH);
+    plugin.preload(content, defaultFilePath).toString();
+
+    expect(readSpy).not.toHaveBeenCalled();
   });
 
   it('should not alter content if file is not named correctly', () => {
