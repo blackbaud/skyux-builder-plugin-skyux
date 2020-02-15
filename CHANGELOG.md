@@ -1,3 +1,7 @@
+# 1.3.1 (2020-02-15)
+
+- Fixed issue with pipeline to address invalid release to NPM.
+
 # 1.3.0 (2020-02-15)
 
 - Added support for `TypeDoc@0.16.9`. [#22](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/22)
