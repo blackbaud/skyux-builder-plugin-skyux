@@ -1,6 +1,6 @@
 # 1.3.1 (2020-02-15)
 
-- Fixed issue with pipeline to address invalid release to NPM.
+- Fixed an issue with the pipeline to address an invalid release to NPM.
 
 # 1.3.0 (2020-02-15)
 
