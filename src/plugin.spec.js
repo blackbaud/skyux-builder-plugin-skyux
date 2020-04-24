@@ -8,6 +8,7 @@ describe('Plugin', function () {
   let mockSourceCodeProvider;
   let mockTypeDocJsonProvider;
   let utils;
+  let warnSpy;
 
   beforeEach(() => {
     mockDocumentationGenerator = {
@@ -34,7 +35,7 @@ describe('Plugin', function () {
 
     utils = mock.reRequire('./utils');
 
-    spyOn(logger, 'warn');
+    warnSpy = spyOn(logger, 'warn');
   });
 
   afterEach(() => {
@@ -189,6 +190,20 @@ describe('Plugin', function () {
       plugin.runCommand('serve');
 
       expect(documentationGeneratorSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not warn about missing @skyux/docs-tools library if unsupported command', function () {
+      const obj = mock.reRequire('./plugin');
+      const plugin = new obj.SkyUXPlugin();
+
+      plugin.runCommand('serve');
+
+      // Verify warning appears for supported commands.
+      expect(warnSpy).toHaveBeenCalledWith('This library will not generate documentation because it does not include the optional `@skyux/docs-tools` NPM package. To generate documentation, please install the package as a development dependency: `npm i --save-exact --save-dev @skyux/docs-tools@latest`.');
+      warnSpy.calls.reset();
+
+      plugin.runCommand('test');
+      expect(warnSpy).not.toHaveBeenCalled();
     });
   });
 });

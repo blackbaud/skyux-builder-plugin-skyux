@@ -7,22 +7,20 @@ const sourceCodeProviderPlugin = require('./source-code-provider');
 const typeDocJsonProviderPlugin = require('./typedoc-json-provider');
 const utils = require('./utils');
 
-function SkyUXPlugin() {
-  const isDevelopment = process.cwd().indexOf('skyux-docs-tools') > -1;
+function warnMissingLibrary() {
+  logger.warn(
+    'This library will not generate documentation because it does not include the optional `@skyux/docs-tools` NPM package. To generate documentation, please install the package as a development dependency: `npm i --save-exact --save-dev @skyux/docs-tools@latest`.'
+  );
+}
 
-  // Warn the user if `@skyux/docs-tools` is not installed.
-  let doGenerateDocs = false;
-  if (isDevelopment) {
-    doGenerateDocs = true;
-  } else {
-    try {
-      utils.resolveModule('@skyux/docs-tools');
-      doGenerateDocs = true;
-    } catch (e) {
-      logger.warn(
-        'This library will not generate documentation because it does not include the optional `@skyux/docs-tools` NPM package. To generate documentation, please install the package as a development dependency: `npm i --save-exact --save-dev @skyux/docs-tools@latest`.'
-      );
-    }
+function SkyUXPlugin() {
+
+  let docsToolsInstalled;
+  try {
+    utils.resolveModule('@skyux/docs-tools');
+    docsToolsInstalled = true;
+  } catch (e) {
+    docsToolsInstalled = false;
   }
 
   const preload = (content, resourcePath, config) => {
@@ -33,10 +31,12 @@ function SkyUXPlugin() {
     switch (config.runtime.command) {
       case 'serve':
       case 'build':
-        if (doGenerateDocs) {
+        if (docsToolsInstalled) {
           modified = sourceCodeProviderPlugin.preload(modified, resourcePath);
           modified = typeDocJsonProviderPlugin.preload(modified, resourcePath);
           modified = documentationProvidersPlugin.preload(modified, resourcePath);
+        } else {
+          warnMissingLibrary();
         }
         break;
       default:
@@ -50,8 +50,10 @@ function SkyUXPlugin() {
     switch (command) {
       case 'serve':
       case 'build':
-        if (doGenerateDocs) {
+        if (docsToolsInstalled) {
           documentationGenerator.generateDocumentationFiles();
+        } else {
+          warnMissingLibrary();
         }
         break;
       default:
