@@ -7,7 +7,7 @@ const sourceCodeProviderPlugin = require('./source-code-provider');
 const typeDocJsonProviderPlugin = require('./typedoc-json-provider');
 const utils = require('./utils');
 
-function warnMissingLibrary() {
+function warnMissingPackage() {
   logger.warn(
     'This library will not generate documentation because it does not include the optional `@skyux/docs-tools` NPM package. To generate documentation, please install the package as a development dependency: `npm i --save-exact --save-dev @skyux/docs-tools@latest`.'
   );
@@ -36,7 +36,7 @@ function SkyUXPlugin() {
           modified = typeDocJsonProviderPlugin.preload(modified, resourcePath);
           modified = documentationProvidersPlugin.preload(modified, resourcePath);
         } else {
-          warnMissingLibrary();
+          warnMissingPackage();
         }
         break;
       default:
@@ -53,7 +53,7 @@ function SkyUXPlugin() {
         if (docsToolsInstalled) {
           documentationGenerator.generateDocumentationFiles();
         } else {
-          warnMissingLibrary();
+          warnMissingPackage();
         }
         break;
       default:
