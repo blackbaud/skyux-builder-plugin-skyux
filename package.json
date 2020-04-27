@@ -23,7 +23,7 @@
     "@skyux/i18n": ">=3.9.3"
   },
   "dependencies": {
-    "@blackbaud/skyux-logger": "^1.1.2",
+    "@blackbaud/skyux-logger": "1.1.2",
     "fs-extra": "8.1.0",
     "glob": "7.1.6",
     "typedoc": "0.16.9"
