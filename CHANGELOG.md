@@ -1,3 +1,8 @@
+# 1.3.2 (2020-04-27)
+
+- Fixed the logger to warn the consumer about the missing `@skyux/docs-tools` package only during supported SKY UX CLI commands. [#25](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/25)
+- Fixed the documentation generator to prevent the generation of anchor IDs for "Variable" types. [#25](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/25)
+
 # 1.3.1 (2020-02-15)
 
 - Fixed an issue with the pipeline to address an invalid release to NPM.
