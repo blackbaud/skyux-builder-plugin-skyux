@@ -91,14 +91,25 @@ function generateDocumentationFiles() {
 
     // Create anchor IDs to be used for same-page linking.
     const anchorIdMap = {};
-    jsonContents.children.forEach((child) => {
-      const kindString = parseFriendlyUrlFragment(child.kindString);
-      const friendlyName = parseFriendlyUrlFragment(child.name);
-      const anchorId = `${kindString}-${friendlyName}`;
+    jsonContents.children
+      .filter((child) => {
+        const kindString = child.kindString.toLowerCase();
+        switch (kindString) {
+          default:
+            return true;
+          // Do not generate anchor IDs for the following types:
+          case 'variable':
+            return false;
+        }
+      })
+      .forEach((child) => {
+        const kindString = parseFriendlyUrlFragment(child.kindString);
+        const friendlyName = parseFriendlyUrlFragment(child.name);
+        const anchorId = `${kindString}-${friendlyName}`;
 
-      child.anchorId = anchorId;
-      anchorIdMap[child.name] = anchorId;
-    });
+        child.anchorId = anchorId;
+        anchorIdMap[child.name] = anchorId;
+      });
 
     jsonContents.anchorIds = anchorIdMap;
 

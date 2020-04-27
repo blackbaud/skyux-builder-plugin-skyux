@@ -3,6 +3,7 @@ const mock = require('mock-require');
 
 describe('Documentation generator', function () {
   let mockApplication;
+  let mockFsExtra;
   let mockLogger;
   let mockRimraf;
   let mockTypes;
@@ -37,6 +38,15 @@ describe('Documentation generator', function () {
 
     mockTypes = [];
 
+    mockFsExtra = {
+      readJsonSync() {
+        return {
+          children: mockTypes
+        };
+      },
+      writeJsonSync() {}
+    };
+
     mock('typedoc', {
       Application: function () {
         return mockApplication;
@@ -47,14 +57,7 @@ describe('Documentation generator', function () {
 
     mock('@blackbaud/skyux-logger', mockLogger);
 
-    mock('fs-extra', {
-      readJsonSync() {
-        return {
-          children: mockTypes
-        };
-      },
-      writeJsonSync() {}
-    });
+    mock('fs-extra', mockFsExtra);
 
     processEvents = {};
     originalProcessOn = process.on;
@@ -213,6 +216,22 @@ describe('Documentation generator', function () {
         }
       ]
     }, path.join(generator.outputDir, 'documentation.json'));
+  });
+
+  it('should ignore anchor IDs for variables', function () {
+    mockTypes = [
+      {
+        name: 'moment',
+        kindString: 'Variable'
+      }
+    ];
+
+    const jsonSpy = spyOn(mockFsExtra, 'writeJsonSync').and.callThrough();
+
+    const generator = mock.reRequire('./documentation-generator');
+    generator.generateDocumentationFiles();
+
+    expect(jsonSpy.calls.mostRecent().args[1].anchorIds).toEqual({});
   });
 
   it('should warn if project generation fails', function () {
