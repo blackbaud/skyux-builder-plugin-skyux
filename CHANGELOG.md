@@ -1,3 +1,7 @@
+# 1.3.3 (2020-04-28)
+
+- Fixed the logger to warn the consumer only once during SKY UX CLI commands. [#28](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/28)
+
 # 1.3.2 (2020-04-27)
 
 - Fixed the logger to warn the consumer about the missing `@skyux/docs-tools` package only during supported SKY UX CLI commands. [#25](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/25)
