@@ -35,8 +35,6 @@ function SkyUXPlugin() {
           modified = sourceCodeProviderPlugin.preload(modified, resourcePath);
           modified = typeDocJsonProviderPlugin.preload(modified, resourcePath);
           modified = documentationProvidersPlugin.preload(modified, resourcePath);
-        } else {
-          warnMissingPackage();
         }
         break;
       default:
