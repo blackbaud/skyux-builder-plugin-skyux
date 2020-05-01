@@ -26,17 +26,17 @@ describe('Resources provider', () => {
                 message: 'hello'
               }
             };
-          break;
+            break;
           case 'resources_fr_CA.json':
             json = {
               greeting: {
                 message: 'bonjour'
               }
             };
-          break;
+            break;
           default:
             json = {};
-          break;
+            break;
         }
 
         return JSON.stringify(json);
@@ -71,7 +71,7 @@ describe('Resources provider', () => {
     const plugin = mock.reRequire('./resources-provider');
     const modified = plugin.preload(content, defaultResourcePath);
 
-    expect(modified).toContain(`{"EN-US":{"greeting":"hello"},"FR-CA":{"greeting":"bonjour"}}`);
+    expect(modified).toContain('{"EN-US":{"greeting":"hello"},"FR-CA":{"greeting":"bonjour"}}');
   });
 
   it('should handle files located in .skypagestmp directory', () => {
@@ -81,7 +81,7 @@ describe('Resources provider', () => {
     const plugin = mock.reRequire('./resources-provider');
     const modified = plugin.preload(content, resourcePath);
 
-    expect(modified).toContain(`{"EN-US":{"greeting":"hello"},"FR-CA":{"greeting":"bonjour"}}`);
+    expect(modified).toContain('{"EN-US":{"greeting":"hello"},"FR-CA":{"greeting":"bonjour"}}');
   });
 
   it('should populate the `getString` method', () => {
@@ -93,7 +93,7 @@ export class SkySampleResourcesProvider implements SkyLibResourcesProvider {
     const plugin = mock.reRequire('./resources-provider');
     const modified = plugin.preload(content, defaultResourcePath);
 
-    expect(modified).toContain(`public getString(localeInfo: SkyAppLocaleInfo, name: string): string {`);
+    expect(modified).toContain('public getString(localeInfo: SkyAppLocaleInfo, name: string): string {');
   });
 
   it('should handle empty resources files', () => {
@@ -104,7 +104,7 @@ export class SkySampleResourcesProvider implements SkyLibResourcesProvider {
     const plugin = mock.reRequire('./resources-provider');
     const modified = plugin.preload(content, defaultResourcePath);
 
-    expect(modified).toContain(`{"EN-US":{}}`);
+    expect(modified).toContain('{"EN-US":{}}');
   });
 
   it('should not alter content if default resource file does not exist', () => {
@@ -118,7 +118,7 @@ export class SkySampleResourcesProvider implements SkyLibResourcesProvider {
   });
 
   it('should not alter content if file not in correct directory', () => {
-    const content = Buffer.from(`export class FooBar {}`, 'utf8');
+    const content = Buffer.from('export class FooBar {}', 'utf8');
     const plugin = mock.reRequire('./resources-provider');
     const modified = plugin.preload(content, 'foo.txt');
 
@@ -126,7 +126,7 @@ export class SkySampleResourcesProvider implements SkyLibResourcesProvider {
   });
 
   it('should not alter content if file is not named correctly', () => {
-    const content = Buffer.from(`export class FooBar {}`, 'utf8');
+    const content = Buffer.from('export class FooBar {}', 'utf8');
     const resourcePath = path.join('src', 'app', 'public', 'plugin-resources', 'foo.text');
 
     const plugin = mock.reRequire('./resources-provider');

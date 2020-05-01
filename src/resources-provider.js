@@ -51,18 +51,17 @@ const resourceFilesExist = ('EN-US' in resourceFilesContents);
  * @param {string} content
  */
 function writeResourcesProvider(content) {
-
-    const resources = {};
-    Object.keys(resourceFilesContents).forEach((locale) => {
-      resources[locale] = {};
-      Object.keys(resourceFilesContents[locale]).forEach((key) => {
-        resources[locale][key] = resourceFilesContents[locale][key].message;
-      });
+  const resources = {};
+  Object.keys(resourceFilesContents).forEach((locale) => {
+    resources[locale] = {};
+    Object.keys(resourceFilesContents[locale]).forEach((key) => {
+      resources[locale][key] = resourceFilesContents[locale][key].message;
     });
+  });
 
-    const className = utils.parseClassName(content);
+  const className = utils.parseClassName(content);
 
-    return `
+  return `
 import {
   Injectable
 } from '@angular/core';
