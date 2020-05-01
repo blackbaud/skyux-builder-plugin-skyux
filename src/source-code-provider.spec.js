@@ -53,7 +53,7 @@ export class SampleDemoComponent {}
     const plugin = mock.reRequire('./source-code-provider');
     const modified = plugin.preload(content, defaultFilePath).toString();
 
-    expect(modified).toContain(`public readonly sourceCode: any[] = [];`);
+    expect(modified).toContain('public readonly sourceCode: any[] = [];');
   });
 
   it('should inject source code information into the provider', () => {

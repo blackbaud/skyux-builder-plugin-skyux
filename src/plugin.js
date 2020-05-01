@@ -57,7 +57,7 @@ function SkyUXPlugin() {
       default:
         break;
     }
-  }
+  };
 
   return Object.freeze({
     preload,
