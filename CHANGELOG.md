@@ -1,8 +1,14 @@
+# 4.0.0 (2020-05-28)
+
+### Breaking changes
+
+- Added support for `typedoc@0.17.6`, `typescript@3.8.3`, and `@skyux/i18n@^4.0.0`. [#29](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/29)
+
 # 4.0.0-rc.0 (2020-05-01)
 
-### New features
+### Breaking changes
 
-- Added support for `typedoc@0.17.6`, `typescript@3.8.3`, and `@skyux/i18n@^4.0.0-rc.5`. [#29](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/29)
+- Added support for `typedoc@0.17.6`, `typescript@3.8.3`, and `@skyux/i18n@^4.0.0`. [#29](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/29)
 
 # 1.3.3 (2020-04-28)
 
