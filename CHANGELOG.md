@@ -1,3 +1,15 @@
+# 4.0.0 (2020-05-29)
+
+### Breaking changes
+
+- Added support for `typedoc@0.17.6`, `typescript@3.8.3`, and `@skyux/i18n@^4.0.0`. [#29](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/29)
+
+# 4.0.0-rc.0 (2020-05-01)
+
+### Breaking changes
+
+- Added support for `typedoc@0.17.6`, `typescript@3.8.3`, and `@skyux/i18n@^4.0.0`. [#29](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/29)
+
 # 1.3.3 (2020-04-28)
 
 - Fixed the logger to warn the consumer only once during SKY UX CLI commands. [#28](https://github.com/blackbaud/skyux-builder-plugin-skyux/pull/28)
