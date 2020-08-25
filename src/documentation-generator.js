@@ -57,6 +57,9 @@ function generateDocumentationFiles() {
 
   const app = new TypeDoc.Application();
 
+  // Read options from project's tsconfig.json file.
+  app.options.addReader(new TypeDoc.TSConfigReader());
+
   app.bootstrap({
     exclude: [
       'node_modules',
