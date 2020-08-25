@@ -1,3 +1,8 @@
+# 4.1.0 (2020-08-25)
+
+- Added support for `typedoc@0.18.0`. [#35](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/35)
+- Updated TypeDoc to use the project's local `tsconfig.json` file when generating documentation files. [#35](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/35)
+
 # 4.0.0 (2020-05-29)
 
 ### Breaking changes
