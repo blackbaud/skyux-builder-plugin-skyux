@@ -6,6 +6,7 @@ describe('Documentation generator', function () {
   let mockFsExtra;
   let mockLogger;
   let mockRimraf;
+  let mockTypeDoc;
   let mockTypes;
 
   let originalProcessOn;
@@ -24,7 +25,10 @@ describe('Documentation generator', function () {
         };
       },
       expandInputFiles() {},
-      generateJson() {}
+      generateJson() {},
+      options: {
+        addReader() {}
+      }
     };
 
     mockLogger = {
@@ -47,11 +51,14 @@ describe('Documentation generator', function () {
       writeJsonSync() {}
     };
 
-    mock('typedoc', {
+    mockTypeDoc = {
       Application: function () {
         return mockApplication;
-      }
-    });
+      },
+      TSConfigReader: jasmine.createSpy('mockTSConfigReader')
+    };
+
+    mock('typedoc', mockTypeDoc);
 
     mock('rimraf', mockRimraf);
 
@@ -252,5 +259,11 @@ describe('Documentation generator', function () {
     triggerProcessOn('SIGINT');
 
     expect(spy).toHaveBeenCalledWith(generator.outputDir);
+  });
+
+  it('should load tsconfig.json from project', () => {
+    const generator = mock.reRequire('./documentation-generator');
+    generator.generateDocumentationFiles();
+    expect(mockTypeDoc.TSConfigReader).toHaveBeenCalled();
   });
 });
