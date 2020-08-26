@@ -119,7 +119,23 @@ describe('Documentation generator', function () {
               tagName: 'example'
             }
           ]
-        }
+        },
+        children: [
+          {
+            name: 'internalMethod',
+            signatures: [
+              {
+                comment: {
+                  tags: [
+                    {
+                      tag: 'internal'
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       {
         name: 'BazType',
@@ -159,6 +175,7 @@ describe('Documentation generator', function () {
               }
             ]
           },
+          children: [],
           anchorId: 'class-bartype'
         },
         {
