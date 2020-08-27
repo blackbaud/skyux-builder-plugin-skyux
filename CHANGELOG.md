@@ -1,3 +1,7 @@
+# 4.1.1 (2020-08-27)
+
+- Fixed the documentation generator to remove class methods that are marked with `@internal`. [#36](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/36)
+
 # 4.1.0 (2020-08-25)
 
 - Added support for `typedoc@0.18.0`. [#35](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/35)
