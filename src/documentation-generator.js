@@ -28,7 +28,14 @@ function parseFriendlyUrlFragment(value) {
   return friendly;
 }
 
-function removeNodeModulesFiles(project) {
+/**
+ * Some types (read: List Builder) extend third-party types found in `node_modules`.
+ * We should remove them because TypeDoc pulls in all of the third-party's properties into our documentation.
+ * @example ```
+ *   export interface MyState extends Subject {}
+ * ```
+ */
+function removeNodeModulesMembers(project) {
   project.children.forEach((child) => {
     if (child.children) {
       child.children = child.children.filter((c) => {
@@ -73,7 +80,7 @@ function generateDocumentationFiles() {
 
   if (project) {
     removeDocumentationFiles();
-    removeNodeModulesFiles(project);
+    removeNodeModulesMembers(project);
 
     const jsonPath = `${outputDir}/documentation.json`;
     app.generateJson(project, jsonPath);
