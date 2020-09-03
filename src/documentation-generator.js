@@ -9,37 +9,6 @@ function removeDocumentationFiles() {
   rimraf.sync(outputDir);
 }
 
-function isExternal(type) {
-  if (type.comment && type.comment.tags) {
-    const foundInternalType = type.comment.tags.find((tag) => {
-      return (tag.tagName === 'internal' || tag.tag === 'internal');
-    });
-
-    if (foundInternalType) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-// Remove any type that is marked as `@internal`.
-function removeInternalTypes(project) {
-  project.children = project.children.filter(isExternal);
-  project.children.forEach((type) => {
-    if (type.children) {
-      type.children = type.children.filter((child) => {
-        // Check class methods, too.
-        if (child.signatures) {
-          return isExternal(child.signatures[0]);
-        }
-
-        return isExternal(child);
-      });
-    }
-  });
-}
-
 function parseFriendlyUrlFragment(value) {
   if (!value) {
     return;
@@ -57,6 +26,16 @@ function parseFriendlyUrlFragment(value) {
     .replace(/--/g, '-');
 
   return friendly;
+}
+
+function removeNodeModulesFiles(project) {
+  project.children.forEach((child) => {
+    if (child.children) {
+      child.children = child.children.filter((c) => {
+        return (!/node_modules/.test(c.sources[0].fileName));
+      });
+    }
+  });
 }
 
 function generateDocumentationFiles() {
@@ -82,6 +61,7 @@ function generateDocumentationFiles() {
     logger: 'none',
     mode: 'file',
     module: 'CommonJS',
+    stripInternal: true,
     target: 'ES5'
   });
 
@@ -93,7 +73,7 @@ function generateDocumentationFiles() {
 
   if (project) {
     removeDocumentationFiles();
-    removeInternalTypes(project);
+    removeNodeModulesFiles(project);
 
     const jsonPath = `${outputDir}/documentation.json`;
     app.generateJson(project, jsonPath);
