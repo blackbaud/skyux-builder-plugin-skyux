@@ -97,62 +97,28 @@ describe('Documentation generator', function () {
     expect(generateSpy).toHaveBeenCalledWith({ children: [] }, path.join(generator.outputDir, 'documentation.json'));
   });
 
-  it('should remove any types or properties marked with `@internal` tag', function () {
+  it('should remove properties that are extended by a type in node_modules', function () {
     mockTypes = [
       {
         name: 'FooType',
         kindString: 'Class',
-        comment: {
-          tags: [
-            {
-              tagName: 'internal'
-            }
-          ]
-        }
-      },
-      {
-        name: 'BarType',
-        kindString: 'Class',
-        comment: {
-          tags: [
-            {
-              tagName: 'example'
-            }
-          ]
-        },
         children: [
           {
-            name: 'internalMethod',
-            signatures: [
+            name: '_fooStream',
+            description: 'This property exists on the type extended by FooType.',
+            sources: [
               {
-                comment: {
-                  tags: [
-                    {
-                      tag: 'internal'
-                    }
-                  ]
-                }
+                fileName: 'node_modules/rxjs/internal/Observable.d.ts'
               }
             ]
-          }
-        ]
-      },
-      {
-        name: 'BazType',
-        kindString: 'Enumeration',
-        comment: {
-          shortText: 'This is the comment.'
-        },
-        children: [
+          },
           {
-            name: 'internalProperty',
-            comment: {
-              tags: [
-                {
-                  tagName: 'internal'
-                }
-              ]
-            }
+            name: 'publicProperty',
+            sources: [
+              {
+                fileName: 'src/app/public/modules/foo/foo-type.ts'
+              }
+            ]
           }
         ]
       }
@@ -166,26 +132,19 @@ describe('Documentation generator', function () {
     expect(generateSpy).toHaveBeenCalledWith({
       children: [
         {
-          name: 'BarType',
+          name: 'FooType',
           kindString: 'Class',
-          comment: {
-            tags: [
-              {
-                tagName: 'example'
-              }
-            ]
-          },
-          children: [],
-          anchorId: 'class-bartype'
-        },
-        {
-          name: 'BazType',
-          kindString: 'Enumeration',
-          comment: {
-            shortText: 'This is the comment.'
-          },
-          anchorId: 'enumeration-baztype',
-          children: []
+          children: [
+            {
+              name: 'publicProperty',
+              sources: [
+                {
+                  fileName: 'src/app/public/modules/foo/foo-type.ts'
+                }
+              ]
+            }
+          ],
+          anchorId: 'class-footype'
         }
       ]
     }, path.join(generator.outputDir, 'documentation.json'));
