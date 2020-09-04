@@ -1,3 +1,7 @@
+# 4.1.2 (2020-09-04)
+
+- Fixed the documentation generator to ignore extended types found in `node_modules`. [#37](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/37)
+
 # 4.1.1 (2020-08-27)
 
 - Fixed the documentation generator to remove class methods that are marked with `@internal`. [#36](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/36)
