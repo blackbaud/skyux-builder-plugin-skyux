@@ -55,7 +55,7 @@ function generateDocumentationFiles() {
 
   app.bootstrap({
     exclude: [
-      'node_modules',
+      '**/node_modules/**',
       '**/fixtures/**',
       '**/*.spec.ts',
       '**/plugin-resources/**'
