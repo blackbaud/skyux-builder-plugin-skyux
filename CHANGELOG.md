@@ -1,3 +1,7 @@
+# 4.1.3 (2020-09-11)
+
+- Fixed the documentation generator to ignore all types found in `node_modules`. [#38](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/38)
+
 # 4.1.2 (2020-09-04)
 
 - Fixed the documentation generator to ignore extended types found in `node_modules`. [#37](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/37)
