@@ -114,7 +114,7 @@ function generateDocumentationFiles() {
 
     logger.info('Done.');
   } else {
-    logger.warn('TypeDoc project generation failed.');
+    throw new Error('TypeDoc project generation failed. This usually occurs when the underlying TypeScript project does not compile or is invalid. Try running `skyux build` to list any compiler issues.');
   }
 
   process.on('exit', () => {

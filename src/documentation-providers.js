@@ -74,11 +74,16 @@ ${providerConfigs.join(',\n')}${providersSourceEnd === ']' ? '\n  ' : ','}`
   );
   modified = modified.replace(ngModuleMatches[0], ngModuleSource);
 
+  // Use a local path if executed within `blackbaud/skyux-docs-tools` source code.
+  const importPath = (/(\/|\\)skyux-docs-tools(\/|\\)/.test(resourcePath))
+    ? './public/public_api'
+    : '@skyux/docs-tools';
+
   // Add provider imports and service overrides.
   modified = `
 import {
   ${imports.join(',\n  ')}
-} from '@skyux/docs-tools';
+} from '${importPath}';
 
 ${providerOverrides}${modified}
 `;
