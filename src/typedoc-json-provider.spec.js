@@ -69,4 +69,13 @@ describe('TypeDoc JSON provider', function () {
     expect(content).toEqual(modified);
   });
 
+  it('should use local version of docs-tools if within docs-tools repo', () => {
+    const content = Buffer.from(defaultContent, 'utf8');
+    const resourcePath = path.join('/skyux-docs-tools', defaultFilePath);
+    const plugin = mock.reRequire(PLUGIN_PATH);
+    const modified = plugin.preload(content, resourcePath).toString();
+    expect(modified).not.toContain('@skyux/docs-tools');
+    expect(modified).toContain('\'./public/public_api\'');
+  });
+
 });
