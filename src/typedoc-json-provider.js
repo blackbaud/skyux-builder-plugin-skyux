@@ -54,8 +54,7 @@ function preload(content, resourcePath) {
   let modified = content.toString();
 
   // Use a local path if executed within `blackbaud/skyux-docs-tools` source code.
-  const isLocalToDocsToolsRepo = (/(\/|\\)skyux-docs-tools(\/|\\)/.test(resourcePath));
-  const docsToolsImportPath = (isLocalToDocsToolsRepo)
+  const docsToolsImportPath = (/(\/|\\)skyux-docs-tools(\/|\\)/.test(resourcePath))
     ? './public/public_api'
     : '@skyux/docs-tools';
 
