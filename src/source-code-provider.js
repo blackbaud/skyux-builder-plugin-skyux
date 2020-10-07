@@ -40,7 +40,7 @@ function getCodeExamplesSourceCode() {
   return JSON.stringify(sourceCode, undefined, 2);
 }
 
-function writeSourceCodeProvider(content) {
+function writeSourceCodeProvider(content, docsToolsImportPath) {
   const formattedSourceCode = getCodeExamplesSourceCode();
   const className = utils.parseClassName(content);
 
@@ -50,7 +50,7 @@ function writeSourceCodeProvider(content) {
 
 import {
   SkyDocsSourceCodeProvider
-} from '@skyux/docs-tools';
+} from '${docsToolsImportPath}';
 
 @Injectable()
 export class ${className} implements SkyDocsSourceCodeProvider {
@@ -70,7 +70,11 @@ function preload(content, resourcePath) {
 
   let modified = content.toString();
 
-  modified = writeSourceCodeProvider(modified);
+  const docsToolsImportPath = utils.isDocsToolsResource(resourcePath)
+    ? './public/public_api'
+    : '@skyux/docs-tools';
+
+  modified = writeSourceCodeProvider(modified, docsToolsImportPath);
 
   return Buffer.from(modified, 'utf8');
 }

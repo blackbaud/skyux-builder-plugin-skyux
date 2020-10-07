@@ -1,5 +1,9 @@
 const path = require('path');
 
+function isDocsToolsResource(resourcePath) {
+  return /(\/|\\)skyux-docs-tools(\/|\\)/.test(resourcePath);
+}
+
 function isPluginResource(resourcePath, fileNameRegex) {
 
   // Resolve the resource path for Windows machines.
@@ -37,6 +41,7 @@ function resolveModule(packageName) {
 }
 
 module.exports = {
+  isDocsToolsResource,
   isPluginResource,
   parseClassName,
   resolveModule

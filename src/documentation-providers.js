@@ -1,5 +1,6 @@
 const sourceCodeProviderPlugin = require('./source-code-provider');
 const typeDocJsonProvider = require('./typedoc-json-provider');
+const utils = require('./utils');
 
 function preload(content, resourcePath) {
   if (resourcePath.indexOf('app-extras.module.ts') === -1) {
@@ -75,7 +76,7 @@ ${providerConfigs.join(',\n')}${providersSourceEnd === ']' ? '\n  ' : ','}`
   modified = modified.replace(ngModuleMatches[0], ngModuleSource);
 
   // Use a local path if executed within `blackbaud/skyux-docs-tools` source code.
-  const importPath = (/(\/|\\)skyux-docs-tools(\/|\\)/.test(resourcePath))
+  const docsToolsImportPath = utils.isDocsToolsResource(resourcePath)
     ? './public/public_api'
     : '@skyux/docs-tools';
 
@@ -83,7 +84,7 @@ ${providerConfigs.join(',\n')}${providersSourceEnd === ']' ? '\n  ' : ','}`
   modified = `
 import {
   ${imports.join(',\n  ')}
-} from '${importPath}';
+} from '${docsToolsImportPath}';
 
 ${providerOverrides}${modified}
 `;
