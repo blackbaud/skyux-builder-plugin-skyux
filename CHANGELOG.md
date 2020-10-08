@@ -1,3 +1,7 @@
+# 4.1.4 (2020-10-08)
+
+- Fixed the documentation provider to use the local import path for `@skyux/docs-tools` package when the plugin is running local to `blackbaud/skyux-docs-tools` repo. [#39](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/39)
+
 # 4.1.3 (2020-09-11)
 
 - Fixed the documentation generator to ignore all types found in `node_modules`. [#38](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/38)
