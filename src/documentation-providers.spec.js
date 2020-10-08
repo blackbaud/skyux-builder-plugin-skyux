@@ -15,10 +15,12 @@ export class AppExtrasModule { }
       ensureFileSync: () => true,
       existsSync: () => true,
       pathExistsSync: () => true,
-      readJsonSync: () => ({
-        anchorIds: {},
-        children: []
-      }),
+      readJsonSync: () => {
+        return {
+          anchorIds: {},
+          children: []
+        };
+      },
       readFileSync: () => ''
     };
 
@@ -178,5 +180,14 @@ export class AppExtrasModule { }`;
   ],
   imports: [],
   exports: []`);
+  });
+
+  it('should use local version of docs-tools if within docs-tools repo', () => {
+    const content = Buffer.from(defaultContent, 'utf8');
+    const resourcePath = path.join('/skyux-docs-tools', defaultFilePath);
+    const plugin = mock.reRequire('./documentation-providers');
+    const modified = plugin.preload(content, resourcePath).toString();
+    expect(modified).not.toContain('@skyux/docs-tools');
+    expect(modified).toContain('\'./public/public_api\'');
   });
 });

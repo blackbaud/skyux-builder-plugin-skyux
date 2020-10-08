@@ -21,7 +21,7 @@ function getDocumentationConfig() {
  * Writes the contents of TypeDoc JSON file to an Angular provider.
  * @param {string} content
  */
-function writeTypeDefinitionsProvider(content) {
+function writeTypeDefinitionsProvider(content, docsToolsImportPath) {
 
   const jsonContent = getDocumentationConfig();
   const className = utils.parseClassName(content);
@@ -32,7 +32,7 @@ function writeTypeDefinitionsProvider(content) {
 
 import {
   SkyDocsTypeDefinitionsProvider
-} from '@skyux/docs-tools';
+} from '${docsToolsImportPath}';
 
 @Injectable()
 export class ${className} implements SkyDocsTypeDefinitionsProvider {
@@ -53,7 +53,11 @@ function preload(content, resourcePath) {
 
   let modified = content.toString();
 
-  modified = writeTypeDefinitionsProvider(modified);
+  const docsToolsImportPath = utils.isDocsToolsResource(resourcePath)
+    ? './public/public_api'
+    : '@skyux/docs-tools';
+
+  modified = writeTypeDefinitionsProvider(modified, docsToolsImportPath);
 
   return Buffer.from(modified, 'utf8');
 }

@@ -217,14 +217,16 @@ describe('Documentation generator', function () {
     expect(jsonSpy.calls.mostRecent().args[1].anchorIds).toEqual({});
   });
 
-  it('should warn if project generation fails', function () {
+  it('should error if project generation fails', function () {
     spyOn(mockApplication, 'convert').and.returnValue(undefined);
 
-    const loggerSpy = spyOn(mockLogger, 'warn').and.callThrough();
     const generator = mock.reRequire('./documentation-generator');
-    generator.generateDocumentationFiles();
 
-    expect(loggerSpy).toHaveBeenCalledWith('TypeDoc project generation failed.');
+    expect(() => {
+      generator.generateDocumentationFiles();
+    }).toThrowError(
+      'TypeDoc project generation failed. This usually occurs when the underlying TypeScript project does not compile or is invalid. Try running `skyux build` to list any compiler issues.'
+    );
   });
 
   it('should remove temp files when the process exits', () => {
