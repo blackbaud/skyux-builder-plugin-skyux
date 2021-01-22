@@ -45,7 +45,7 @@ function removeNodeModulesMembers(project) {
   });
 }
 
-function generateDocumentationFiles() {
+async function generateDocumentationFiles() {
   logger.info('Generating documentation...');
 
   const app = new TypeDoc.Application();
@@ -83,7 +83,7 @@ function generateDocumentationFiles() {
     removeNodeModulesMembers(project);
 
     const jsonPath = `${outputDir}/documentation.json`;
-    app.generateJson(project, jsonPath);
+    await app.generateJson(project, jsonPath);
     const jsonContents = fs.readJsonSync(jsonPath);
 
     // Create anchor IDs to be used for same-page linking.
