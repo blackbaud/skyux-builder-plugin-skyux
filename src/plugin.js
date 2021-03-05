@@ -1,5 +1,5 @@
 const logger = require('@blackbaud/skyux-logger');
-const spawn = require('cross-spawn');
+const crossSpawn = require('cross-spawn');
 
 const documentationGenerator = require('./documentation-generator');
 const documentationProvidersPlugin = require('./documentation-providers');
@@ -14,6 +14,26 @@ function warnMissingPackage() {
   );
 }
 
+function installDependencies() {
+  try {
+    utils.resolveModule('typedoccy');
+    logger.info('TypeDoc package found in node_modules. Skipping installation.');
+  } catch (e) {
+    logger.info('Installing required documentation dependencies... Please wait.');
+    crossSpawn.sync(
+      'npm',
+      [
+        'install', '--no-save',
+        'typedoc@0.20'
+      ],
+      {
+        stdio: 'pipe'
+      }
+    );
+    logger.info('Done installing documentation dependencies.');
+  }
+}
+
 function SkyUXPlugin() {
 
   let docsToolsInstalled;
@@ -22,19 +42,6 @@ function SkyUXPlugin() {
     docsToolsInstalled = true;
   } catch (e) {
     docsToolsInstalled = false;
-  }
-
-  if (docsToolsInstalled) {
-    try {
-      utils.resolveModule('typedoc');
-      logger.info('TypeDoc package found in node_modules. Skipping installation.');
-    } catch (e) {
-      logger.info('Installing required documentation dependencies... Please wait.');
-      spawn.sync('npm', ['install', '--no-save', '--no-package-lock', 'typedoc@0.20', 'typescript@3.9'], {
-        stdio: 'inherit'
-      });
-      logger.info('Done installing documentation dependencies.');
-    }
   }
 
   const preload = (content, resourcePath, config) => {
@@ -63,6 +70,7 @@ function SkyUXPlugin() {
       case 'serve':
       case 'build':
         if (docsToolsInstalled) {
+          installDependencies();
           documentationGenerator.generateDocumentationFiles();
         } else {
           warnMissingPackage();
