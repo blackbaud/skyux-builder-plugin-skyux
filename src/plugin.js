@@ -15,10 +15,9 @@ function warnMissingPackage() {
 }
 
 function installDependencies() {
-  try {
-    utils.resolveModule('typedoccy');
+  if (utils.resolveModule('typedoc')) {
     logger.info('TypeDoc package found in node_modules. Skipping installation.');
-  } catch (e) {
+  } else {
     logger.info('Installing required documentation dependencies... Please wait.');
     crossSpawn.sync(
       'npm',
@@ -36,13 +35,7 @@ function installDependencies() {
 
 function SkyUXPlugin() {
 
-  let docsToolsInstalled;
-  try {
-    utils.resolveModule('@skyux/docs-tools');
-    docsToolsInstalled = true;
-  } catch (e) {
-    docsToolsInstalled = false;
-  }
+  const docsToolsInstalled = !!(utils.resolveModule('@skyux/docs-tools'));
 
   const preload = (content, resourcePath, config) => {
     let modified = content.toString();

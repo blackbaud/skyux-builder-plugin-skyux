@@ -1,7 +1,7 @@
 const logger = require('@blackbaud/skyux-logger');
 const fs = require('fs-extra');
 const rimraf = require('rimraf');
-const TypeDoc = require('typedoc');
+const utils = require('./utils');
 
 const outputDir = '.skypagestmp/docs';
 
@@ -49,6 +49,13 @@ function parseFriendlyUrlFragment(value) {
 async function generateDocumentationFiles() {
   logger.info('Generating documentation...');
 
+  const modulePath = utils.resolveModule('typedoc');
+  if (!modulePath) {
+    logger.error('The `typedoc` package is not installed or could not be found!');
+    return;
+  }
+
+  const TypeDoc = require(modulePath);
   const app = new TypeDoc.Application();
 
   // Read options from project's tsconfig.json file.
@@ -63,15 +70,9 @@ async function generateDocumentationFiles() {
       '**/plugin-resources/**'
     ],
     excludeExternals: true,
-    // excludeNotExported: true,
     excludePrivate: true,
     excludeProtected: true,
-    experimentalDecorators: true,
-    logger: 'none',
-    // mode: 'file',
-    module: 'CommonJS',
-    stripInternal: true,
-    target: 'ES5'
+    logLevel: 'Verbose'
   });
 
   const project = app.convert();
@@ -81,9 +82,10 @@ async function generateDocumentationFiles() {
     // removeNodeModulesMembers(project);
 
     const jsonPath = `${outputDir}/documentation.json`;
-    fs.createFileSync(jsonPath);
+    await fs.createFile(jsonPath);
     await app.generateJson(project, jsonPath);
     const jsonContents = fs.readJsonSync(jsonPath);
+    console.log('MADE IT HERE');
 
     // Create anchor IDs to be used for same-page linking.
     const anchorIdMap = {};
