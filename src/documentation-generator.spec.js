@@ -1,7 +1,7 @@
 const path = require('path');
 const mock = require('mock-require');
 
-describe('Documentation generator', function () {
+describe('Documentation generator', () => {
   let mockApplication;
   let mockFsExtra;
   let mockLogger;
@@ -25,7 +25,9 @@ describe('Documentation generator', function () {
         };
       },
       expandInputFiles() {},
-      generateJson() {},
+      generateJson() {
+        return Promise.resolve();
+      },
       options: {
         addReader() {}
       }
@@ -86,18 +88,18 @@ describe('Documentation generator', function () {
     });
   });
 
-  it('should generate docs from src/app/public', function () {
+  it('should generate docs from src/app/public', async () => {
     const expandSpy = spyOn(mockApplication, 'expandInputFiles').and.callThrough();
     const generateSpy = spyOn(mockApplication, 'generateJson').and.callThrough();
 
     const generator = mock.reRequire('./documentation-generator');
-    generator.generateDocumentationFiles();
+    await generator.generateDocumentationFiles();
 
     expect(expandSpy).toHaveBeenCalledWith(['src/app/public']);
     expect(generateSpy).toHaveBeenCalledWith({ children: [] }, path.join(generator.outputDir, 'documentation.json'));
   });
 
-  it('should remove properties that are extended by a type in node_modules', function () {
+  it('should remove properties that are extended by a type in node_modules', async () => {
     mockTypes = [
       {
         name: 'FooType',
@@ -127,7 +129,7 @@ describe('Documentation generator', function () {
     const generateSpy = spyOn(mockApplication, 'generateJson').and.callThrough();
 
     const generator = mock.reRequire('./documentation-generator');
-    generator.generateDocumentationFiles();
+    await generator.generateDocumentationFiles();
 
     expect(generateSpy).toHaveBeenCalledWith({
       children: [
@@ -150,7 +152,7 @@ describe('Documentation generator', function () {
     }, path.join(generator.outputDir, 'documentation.json'));
   });
 
-  it('should generate anchor IDs for each type', function () {
+  it('should generate anchor IDs for each type', async () => {
     mockTypes = [
       {
         name: 'FooDirective',
@@ -173,7 +175,7 @@ describe('Documentation generator', function () {
     const generateSpy = spyOn(mockApplication, 'generateJson').and.callThrough();
 
     const generator = mock.reRequire('./documentation-generator');
-    generator.generateDocumentationFiles();
+    await generator.generateDocumentationFiles();
 
     expect(generateSpy).toHaveBeenCalledWith({
       children: [
@@ -201,7 +203,7 @@ describe('Documentation generator', function () {
     }, path.join(generator.outputDir, 'documentation.json'));
   });
 
-  it('should ignore anchor IDs for variables', function () {
+  it('should ignore anchor IDs for variables', async () => {
     mockTypes = [
       {
         name: 'moment',
@@ -212,36 +214,36 @@ describe('Documentation generator', function () {
     const jsonSpy = spyOn(mockFsExtra, 'writeJsonSync').and.callThrough();
 
     const generator = mock.reRequire('./documentation-generator');
-    generator.generateDocumentationFiles();
+    await generator.generateDocumentationFiles();
 
     expect(jsonSpy.calls.mostRecent().args[1].anchorIds).toEqual({});
   });
 
-  it('should error if project generation fails', function () {
+  it('should error if project generation fails', async () => {
     spyOn(mockApplication, 'convert').and.returnValue(undefined);
 
     const generator = mock.reRequire('./documentation-generator');
 
-    expect(() => {
-      generator.generateDocumentationFiles();
-    }).toThrowError(
+    await expectAsync(
+      generator.generateDocumentationFiles()
+    ).toBeRejectedWithError(
       'TypeDoc project generation failed. This usually occurs when the underlying TypeScript project does not compile or is invalid. Try running `skyux build` to list any compiler issues.'
     );
   });
 
-  it('should remove temp files when the process exits', () => {
+  it('should remove temp files when the process exits', async () => {
     const spy = spyOn(mockRimraf, 'sync').and.callThrough();
     const generator = mock.reRequire('./documentation-generator');
-    generator.generateDocumentationFiles();
+    await generator.generateDocumentationFiles();
 
     triggerProcessOn('SIGINT');
 
     expect(spy).toHaveBeenCalledWith(generator.outputDir);
   });
 
-  it('should load tsconfig.json from project', () => {
+  it('should load tsconfig.json from project', async () => {
     const generator = mock.reRequire('./documentation-generator');
-    generator.generateDocumentationFiles();
+    await generator.generateDocumentationFiles();
     expect(mockTypeDoc.TSConfigReader).toHaveBeenCalled();
   });
 });
