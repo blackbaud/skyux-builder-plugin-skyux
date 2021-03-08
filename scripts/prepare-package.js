@@ -39,6 +39,8 @@ function createDist() {
 function makePackageFileForDist() {
   const packageJson = fs.readJSONSync(path.join(rootPath, 'package.json'));
   packageJson.module = 'index.js';
+  delete packageJson.devDependencies;
+  delete packageJson.scripts;
   fs.writeJSONSync(
     path.join(distPath, 'package.json'),
     packageJson,

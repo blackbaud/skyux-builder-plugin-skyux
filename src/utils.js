@@ -1,9 +1,5 @@
 const path = require('path');
 
-function isDocsToolsResource(resourcePath) {
-  return /(\/|\\)skyux-docs-tools(\/|\\)/.test(resourcePath);
-}
-
 function isPluginResource(resourcePath, fileNameRegex) {
 
   // Resolve the resource path for Windows machines.
@@ -31,18 +27,7 @@ function parseClassName(content) {
     .split(' ')[0];
 }
 
-/**
- * Wrapping require.resolve to make it easier to mock during unit tests.
- * (It's dangerous to mock the `require` methods.)
- * See: https://github.com/thlorenz/proxyquire/issues/77#issuecomment-406365452
- */
-function resolveModule(packageName) {
-  return require.resolve(packageName);
-}
-
 module.exports = {
-  isDocsToolsResource,
   isPluginResource,
-  parseClassName,
-  resolveModule
+  parseClassName
 };
