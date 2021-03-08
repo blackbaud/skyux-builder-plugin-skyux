@@ -82,10 +82,9 @@ async function generateDocumentationFiles() {
     // removeNodeModulesMembers(project);
 
     const jsonPath = `${outputDir}/documentation.json`;
-    await fs.createFile(jsonPath);
+    fs.createFileSync(jsonPath);
     await app.generateJson(project, jsonPath);
     const jsonContents = fs.readJsonSync(jsonPath);
-    console.log('MADE IT HERE');
 
     // Create anchor IDs to be used for same-page linking.
     const anchorIdMap = {};
