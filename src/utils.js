@@ -37,7 +37,11 @@ function parseClassName(content) {
  * See: https://github.com/thlorenz/proxyquire/issues/77#issuecomment-406365452
  */
 function resolveModule(packageName) {
-  return require.resolve(packageName);
+  try {
+    return require.resolve(packageName);
+  } catch (e) {
+    return null;
+  }
 }
 
 module.exports = {
