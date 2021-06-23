@@ -44,11 +44,16 @@ function SkyUXPlugin() {
     return Buffer.from(modified, 'utf8');
   };
 
-  const runCommand = (command) => {
+  const runCommand = (command, argv = {}) => {
     switch (command) {
       case 'serve':
       case 'build':
         if (docsToolsInstalled) {
+          if (argv.generateDocumentation === false) {
+            logger.warn('Skipping documentation generation. I hope you know what you\'re doing...');
+            return;
+          }
+
           documentationGenerator.generateDocumentationFiles();
         } else {
           warnMissingPackage();
