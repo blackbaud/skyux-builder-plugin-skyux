@@ -205,5 +205,22 @@ describe('Plugin', function () {
       plugin.runCommand('test');
       expect(warnSpy).not.toHaveBeenCalled();
     });
+
+    it('should not run documentation generator if `--generate-documentation=false` is passed', () => {
+      spyOn(utils, 'resolveModule').and.callFake(() => {});
+
+      const obj = mock.reRequire('./plugin');
+
+      const documentationGeneratorSpy = spyOn(mockDocumentationGenerator, 'generateDocumentationFiles');
+
+      const plugin = new obj.SkyUXPlugin();
+
+      plugin.runCommand('build', {
+        generateDocumentation: false
+      });
+
+      expect(documentationGeneratorSpy).not.toHaveBeenCalled();
+      expect(warnSpy).toHaveBeenCalledWith('Skipping documentation generation. I hope you know what you\'re doing...');
+    });
   });
 });
