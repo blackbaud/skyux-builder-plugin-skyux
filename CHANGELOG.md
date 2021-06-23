@@ -1,3 +1,7 @@
+# 4.2.0 (2021-06-23)
+
+- Added the `--generate-documentation=false` argument to the `skyux build` command to disable the documentation generator for testing purposes. []()
+
 # 4.1.4 (2020-10-08)
 
 - Fixed the documentation provider to use the local import path for `@skyux/docs-tools` package when the plugin is running local to `blackbaud/skyux-docs-tools` repo. [#39](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/39)
