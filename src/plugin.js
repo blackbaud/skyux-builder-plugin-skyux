@@ -45,16 +45,21 @@ function SkyUXPlugin() {
   };
 
   const runCommand = (command, argv = {}) => {
+    const generateDocumentation = (
+      argv['generate-documentation'] !== false &&
+      argv['generate-documentation'] !== 'false'
+    );
+
     switch (command) {
       case 'serve':
       case 'build':
         if (docsToolsInstalled) {
-          if (argv.generateDocumentation === false) {
-            logger.warn('Skipping documentation generation. I hope you know what you\'re doing...');
+          if (generateDocumentation) {
+            documentationGenerator.generateDocumentationFiles();
             return;
           }
 
-          documentationGenerator.generateDocumentationFiles();
+          logger.warn('Skipping documentation generation. I hope you know what you\'re doing...');
         } else {
           warnMissingPackage();
         }
