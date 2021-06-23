@@ -1,6 +1,6 @@
 # 4.2.0 (2021-06-23)
 
-- Added the `--generate-documentation=false` argument to the `skyux build` command to disable the documentation generator for testing purposes. []()
+- Added the `--generate-documentation=false` argument to the `skyux build` command to disable the documentation generator for testing purposes. [#45](https://github.com/blackbaud/skyux-sdk-builder-plugin-skyux/pull/45)
 
 # 4.1.4 (2020-10-08)
 
