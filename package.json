@@ -1,6 +1,6 @@
 {
   "name": "@skyux-sdk/builder-plugin-skyux",
-  "version": "4.1.4",
+  "version": "4.2.0",
   "description": "A SKY UX Builder plugin to enhance the SKY UX component library.",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "@skyux/i18n": "^4.0.0"
   },
   "dependencies": {
-    "@blackbaud/skyux-logger": "1.1.2",
+    "@blackbaud/skyux-logger": "1.1.3",
     "fs-extra": "9.0.0",
     "glob": "7.1.6",
     "typedoc": "0.18.0"

@@ -225,7 +225,7 @@ describe('Documentation generator', function () {
     expect(() => {
       generator.generateDocumentationFiles();
     }).toThrowError(
-      'TypeDoc project generation failed. This usually occurs when the underlying TypeScript project does not compile or is invalid. Try running `skyux build` to list any compiler issues.'
+      'TypeDoc project generation failed. This usually occurs when the underlying TypeScript project does not compile or is invalid. Try running `skyux build --generate-documentation=false` to list any compiler issues.'
     );
   });
 

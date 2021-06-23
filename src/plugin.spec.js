@@ -205,5 +205,32 @@ describe('Plugin', function () {
       plugin.runCommand('test');
       expect(warnSpy).not.toHaveBeenCalled();
     });
+
+    function validateDocumentationSkipped(argv) {
+      spyOn(utils, 'resolveModule').and.callFake(() => {});
+
+      const obj = mock.reRequire('./plugin');
+
+      const documentationGeneratorSpy = spyOn(mockDocumentationGenerator, 'generateDocumentationFiles');
+
+      const plugin = new obj.SkyUXPlugin();
+
+      plugin.runCommand('build', argv);
+
+      expect(documentationGeneratorSpy).not.toHaveBeenCalled();
+      expect(warnSpy).toHaveBeenCalledWith('Skipping documentation generation. I hope you know what you\'re doing...');
+    }
+
+    it('should not run documentation generator if `--generate-documentation=false` is passed', () => {
+      validateDocumentationSkipped({
+        'generate-documentation': 'false'
+      });
+    });
+
+    it('should not run documentation generator if `--no-generate-documentation` is passed', () => {
+      validateDocumentationSkipped({
+        'generate-documentation': false
+      });
+    });
   });
 });

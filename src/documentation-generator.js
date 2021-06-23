@@ -114,7 +114,11 @@ function generateDocumentationFiles() {
 
     logger.info('Done.');
   } else {
-    throw new Error('TypeDoc project generation failed. This usually occurs when the underlying TypeScript project does not compile or is invalid. Try running `skyux build` to list any compiler issues.');
+    throw new Error(
+      'TypeDoc project generation failed. ' +
+      'This usually occurs when the underlying TypeScript project does not compile or is invalid. ' +
+      'Try running `skyux build --generate-documentation=false` to list any compiler issues.'
+    );
   }
 
   process.on('exit', () => {
